@@ -2,7 +2,7 @@
 
 ## Overview
 
-You'll be supporting BTEC students (complete beginners) as they build a movie review web app using Python and FastAPI. Students will run the app locally on Replit.
+You'll be supporting BTEC students (complete beginners) as they build a movie review web app using Python and FastAPI. Students will run the app locally using VS Code.
 
 **Session Duration:** 2 hours 45 minutes
 **Students per room:** ~20
@@ -18,7 +18,7 @@ You'll be supporting BTEC students (complete beginners) as they build a movie re
 | **FastAPI** | Web framework (handles routes) |
 | **Jinja2** | HTML templating |
 | **JSON** | Data storage |
-| **Replit** | Online IDE (no setup needed) |
+| **VS Code** | Code editor |
 
 ---
 
@@ -49,7 +49,7 @@ See "Common Issues" section below.
 |------|----------|-----------|
 | 0:00-0:15 | Intro & Demo | Show the finished app, explain the goal |
 | 0:15-0:30 | Code Walkthrough | Explain project structure |
-| 0:30-0:45 | Setup | Help students get Replit running |
+| 0:30-0:45 | Setup | Help students set up VS Code and Python |
 | 0:45-2:30 | Development Time | Roam, help, unblock |
 | 2:30-2:45 | Wrap Up | Celebrate wins, next steps |
 
@@ -168,6 +168,14 @@ def search_movies(query):
 
 **Fix:** Run `pip install -r requirements.txt` and check import statements match exactly
 
+### Issue 8: `'uvicorn' is not recognized`
+**Cause:** Python/pip not in PATH or dependencies not installed
+
+**Fix:**
+- Make sure Python is installed and added to PATH
+- Run `pip install -r requirements.txt`
+- Try `python -m uvicorn main:app --reload`
+
 ---
 
 ## Challenge Solutions (For Your Reference Only!)
@@ -220,50 +228,36 @@ def search_movies(query):
 
 ---
 
-## Replit Setup Guide
+## VS Code Setup Guide
 
 Help students get set up:
 
-### Step 1: Go to Replit
-- Visit **replit.com**
-- Sign up / Log in
+### Step 1: Install Python
+- Download from **python.org/downloads**
+- During installation, check **"Add Python to PATH"**
+- Verify: Open terminal, type `python --version`
 
-### Step 2: Create New Repl
-- Click "+ Create Repl"
-- Choose **Python** template
-- Name it `movie-review-app`
+### Step 2: Install VS Code
+- Download from **code.visualstudio.com**
+- Install the **Python extension** (search in Extensions tab)
 
-### Step 3: Upload Files
-- Delete the default `main.py`
-- Drag and drop all project files
-- Make sure folder structure is correct:
-  ```
-  movie-review-app/
-  ├── main.py
-  ├── database.py
-  ├── requirements.txt
-  ├── data/
-  │   └── movies.json
-  ├── templates/
-  │   ├── base.html
-  │   ├── index.html
-  │   ├── movie.html
-  │   └── error.html
-  └── static/
-      └── css/
-          └── style.css
-  ```
+### Step 3: Open the Project
+- Download/clone the `movie-review-app` folder
+- In VS Code: File → Open Folder → select `movie-review-app`
 
-### Step 4: Configure Replit
-In the `.replit` file, set:
-```
-run = "uvicorn main:app --host 0.0.0.0 --port 8080"
+### Step 4: Open Terminal
+- Press `Ctrl + `` (backtick) to open terminal
+- Or: View → Terminal
+
+### Step 5: Install Dependencies & Run
+```bash
+pip install -r requirements.txt
+uvicorn main:app --reload
 ```
 
-### Step 5: Run
-- Click the **Run** button
-- Wait for dependencies to install
-- A webview should open with the app!
+### Step 6: View the App
+- Open browser to **http://127.0.0.1:8000**
+- The app should load!
 
 ---
 
@@ -271,7 +265,7 @@ run = "uvicorn main:app --host 0.0.0.0 --port 8080"
 
 | Time Left | Expected Progress | Action |
 |-----------|------------------|--------|
-| 2 hours | Setup complete | Everyone has Replit running |
+| 2 hours | Setup complete | Everyone has app running |
 | 1.5 hours | Challenge 2-3 | Fast students on reviews |
 | 1 hour | Challenge 3-4 | Most have working reviews |
 | 30 mins | Challenge 5 | Search working |
@@ -294,7 +288,7 @@ def get_movie_by_id(movie_id):
 ```
 
 ### Check the terminal
-- Errors appear in the Replit console
+- Errors appear in the VS Code terminal
 - Look for the line number in the error message
 
 ### Common error messages
@@ -329,7 +323,7 @@ A: "It connects URLs to Python functions. When you visit `/movie/1`, FastAPI run
 - [ ] Have solution folder ready for reference
 
 ### During the Session
-- [ ] Help with initial Replit setup (first 15 mins critical!)
+- [ ] Help with initial setup (first 15 mins critical!)
 - [ ] Roam the room - don't sit at your desk
 - [ ] Check on quiet students
 - [ ] Watch the clock for pacing
@@ -348,4 +342,4 @@ If you hit a blocker:
 
 ---
 
-You've got this! Have fun! 🎬
+You've got this! Have fun!
