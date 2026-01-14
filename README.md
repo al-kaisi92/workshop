@@ -10,7 +10,7 @@ A hands-on workshop where BTEC students (complete beginners) build a movie revie
 | **Students** | ~20 per room |
 | **Mentors** | 4-5 per room (at least one Python-strong) |
 | **Tech Stack** | Python, FastAPI, Jinja2, JSON |
-| **Platform** | Replit (online IDE) |
+| **Tools** | VS Code, Python 3.8+ |
 
 ## What Students Will Build
 
@@ -28,7 +28,8 @@ workshop/
 ├── README.md                    # This file
 ├── MENTOR_GUIDE.md              # Detailed guide for workshop mentors
 ├── STUDENT_CHALLENGES.md        # Step-by-step challenges for students
-├── WORKSHOP_SLIDES_OUTLINE.md   # Presentation slides outline
+├── slides/                      # PowerPoint presentation
+│   └── workshop-slides.pptx
 ├── movie-review-app/            # Starter code (students work here)
 │   ├── main.py                  # FastAPI routes
 │   ├── database.py              # Students complete TODOs here
@@ -36,10 +37,6 @@ workshop/
 │   ├── data/
 │   │   └── movies.json          # Movie data
 │   ├── templates/               # Jinja2 HTML templates
-│   │   ├── base.html
-│   │   ├── index.html
-│   │   ├── movie.html
-│   │   └── error.html
 │   └── static/css/
 │       └── style.css
 ├── movie-review-app-solution/   # Complete working solution
@@ -54,7 +51,7 @@ workshop/
 |------|----------|-------------|
 | 0:00-0:15 | Intro & Demo | Show the finished app, explain goals |
 | 0:15-0:30 | Code Walkthrough | Explain project structure |
-| 0:30-0:45 | Setup | Help students get Replit running |
+| 0:30-0:45 | Setup | Help students set up VS Code and Python |
 | 0:45-2:30 | Development | Students complete challenges with mentor help |
 | 2:30-2:45 | Wrap Up | Celebrate wins, share next steps |
 
@@ -99,42 +96,36 @@ Students work through 5 challenges in `database.py`, each marked with `TODO` com
 2. **Hint**: Point to the relevant hint in `STUDENT_CHALLENGES.md`
 3. **Show**: If still stuck (10+ mins), show a small example
 
-## Running Locally
+## Setup Instructions
 
 ### Prerequisites
-- Python 3.8+
-- pip
+- Python 3.8 or higher
+- VS Code (with Python extension)
+- pip (Python package manager)
 
-### Setup
+### Running the App
+
 ```bash
 # Clone the repo
 git clone git@github.com:al-kaisi92/workshop.git
-cd workshop
+cd workshop/movie-review-app
 
-# Run the solution
-cd movie-review-app-solution
+# Install dependencies
 pip install -r requirements.txt
+
+# Run the server
 uvicorn main:app --reload
 
 # Visit http://127.0.0.1:8000
 ```
 
-### Run the starter code
-```bash
-cd movie-review-app
-pip install -r requirements.txt
-uvicorn main:app --reload
-```
+### VS Code Setup for Students
 
-## Replit Setup
-
-For the workshop, students use Replit (no local setup needed):
-
-1. Go to **replit.com** and sign up
-2. Create new **Python** Repl
-3. Upload all files from `movie-review-app/`
-4. In `.replit` file, set: `run = "uvicorn main:app --host 0.0.0.0 --port 8080"`
-5. Click **Run**
+1. Install [VS Code](https://code.visualstudio.com/)
+2. Install [Python](https://www.python.org/downloads/)
+3. Install the Python extension in VS Code
+4. Open the `movie-review-app` folder
+5. Open terminal (Ctrl+`) and run the commands above
 
 ## Workshop Materials
 
@@ -142,7 +133,7 @@ For the workshop, students use Replit (no local setup needed):
 |----------|----------|---------|
 | `STUDENT_CHALLENGES.md` | Students | Step-by-step coding challenges |
 | `MENTOR_GUIDE.md` | Mentors | Troubleshooting, solutions, tips |
-| `WORKSHOP_SLIDES_OUTLINE.md` | Presenter | Slide deck content outline |
+| `slides/workshop-slides.pptx` | Presenter | PowerPoint presentation |
 
 ## Common Issues
 
@@ -152,6 +143,7 @@ For the workshop, students use Replit (no local setup needed):
 | Reviews disappear | `add_review` not implemented | Complete Challenge 3 |
 | Rating shows 0 | `get_average_rating` not implemented | Complete Challenge 4 |
 | `IndentationError` | Mixed tabs/spaces | Use consistent 4-space indentation |
+| `ModuleNotFoundError` | Dependencies not installed | Run `pip install -r requirements.txt` |
 
 ## Questions?
 
