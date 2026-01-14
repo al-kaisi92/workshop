@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Movie Review Workshop | Accenture x BTEC</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="#" class="logo">
+                <svg class="accenture-logo" viewBox="0 0 50 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M20.6 0L0 36h9.6L26.4 9 43.2 36H52.8L32.2 0H20.6z" fill="#A100FF"/>
+                </svg>
+                <span class="logo-divider">|</span>
+                <span class="logo-text">Workshop 2025</span>
+            </a>
+            <div class="nav-links">
+                <a href="#about">About</a>
+                <a href="#tech">Tech Stack</a>
+                <a href="#challenges">Challenges</a>
+                <a href="https://github.com/al-kaisi92/workshop" target="_blank" class="btn-github">
+                    <svg viewBox="0 0 24 24" fill="currentColor" width="20" height="20">
+                        <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+                    </svg>
+                    View on GitHub
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <header class="hero">
+        <div class="hero-bg"></div>
+        <div class="hero-content">
+            <div class="hero-badge">Accenture x BTEC Students</div>
+            <h1>Build Your First <span class="gradient-text">Web Application</span></h1>
+            <p>A hands-on workshop where you'll create a movie review app using Python & FastAPI</p>
+            <div class="hero-buttons">
+                <a href="https://github.com/al-kaisi92/workshop" class="btn btn-primary">
+                    Get Started
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20">
+                        <path d="M5 12h14M12 5l7 7-7 7"/>
+                    </svg>
+                </a>
+                <a href="#about" class="btn btn-secondary">Learn More</a>
+            </div>
+            <div class="hero-stats">
+                <div class="stat">
+                    <span class="stat-number">2h 45m</span>
+                    <span class="stat-label">Duration</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-number">5</span>
+                    <span class="stat-label">Challenges</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-number">100%</span>
+                    <span class="stat-label">Hands-on</span>
+                </div>
+            </div>
+        </div>
+        <div class="hero-visual">
+            <div class="code-window">
+                <div class="code-header">
+                    <span class="dot red"></span>
+                    <span class="dot yellow"></span>
+                    <span class="dot green"></span>
+                    <span class="code-title">database.py</span>
+                </div>
+                <pre class="code-content"><code><span class="keyword">def</span> <span class="function">get_movie_by_id</span>(movie_id):
+    movies = load_movies()
+    <span class="keyword">for</span> movie <span class="keyword">in</span> movies:
+        <span class="keyword">if</span> movie[<span class="string">"id"</span>] == movie_id:
+            <span class="keyword">return</span> movie
+    <span class="keyword">return</span> <span class="keyword">None</span></code></pre>
+            </div>
+        </div>
+    </header>
+
+    <!-- About Section -->
+    <section id="about" class="section about">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-badge">About the Workshop</span>
+                <h2>What You'll Build</h2>
+                <p>Create a fully functional movie review application from scratch</p>
+            </div>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">🎬</div>
+                    <h3>Browse Movies</h3>
+                    <p>Display a catalog of movies with posters, titles, and genres</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">⭐</div>
+                    <h3>Star Ratings</h3>
+                    <p>Rate movies 1-5 stars and see average ratings</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">✍️</div>
+                    <h3>Write Reviews</h3>
+                    <p>Submit reviews and read what others think</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🔍</div>
+                    <h3>Search Movies</h3>
+                    <p>Find movies by searching their titles</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Tech Stack Section -->
+    <section id="tech" class="section tech">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-badge">Technology</span>
+                <h2>Tech Stack</h2>
+                <p>Industry-standard tools used by professional developers</p>
+            </div>
+            <div class="tech-grid">
+                <div class="tech-card">
+                    <div class="tech-icon">
+                        <svg viewBox="0 0 128 128" width="48" height="48">
+                            <path fill="#3776AB" d="M63.391 1.988c-4.222.02-8.252.379-11.8 1.007-10.45 1.846-12.346 5.71-12.346 12.837v9.411h24.693v3.137h-33.961c-7.176 0-13.46 4.313-15.426 12.521-2.268 9.405-2.368 15.275 0 25.096 1.755 7.311 5.947 12.519 13.124 12.519h8.491v-11.282c0-8.151 7.051-15.34 15.426-15.34h24.665c6.866 0 12.346-5.654 12.346-12.548v-23.513c0-6.693-5.646-11.72-12.346-12.837-4.244-.706-8.645-1.027-12.866-1.008zm-13.354 7.569c2.55 0 4.634 2.117 4.634 4.721 0 2.593-2.083 4.69-4.634 4.69-2.56 0-4.633-2.097-4.633-4.69-.001-2.604 2.073-4.721 4.633-4.721z"/>
+                            <path fill="#FFD43B" d="M91.682 28.38v10.966c0 8.5-7.208 15.655-15.426 15.655h-24.665c-6.756 0-12.346 5.783-12.346 12.549v23.515c0 6.691 5.818 10.628 12.346 12.547 7.816 2.297 15.312 2.713 24.665 0 6.216-1.801 12.346-5.423 12.346-12.547v-9.412h-24.664v-3.138h37.012c7.176 0 9.852-5.005 12.348-12.519 2.578-7.735 2.467-15.174 0-25.096-1.774-7.145-5.161-12.521-12.348-12.521h-9.268zm-13.873 59.547c2.561 0 4.634 2.097 4.634 4.692 0 2.602-2.074 4.719-4.634 4.719-2.55 0-4.633-2.117-4.633-4.719 0-2.595 2.083-4.692 4.633-4.692z"/>
+                        </svg>
+                    </div>
+                    <h3>Python</h3>
+                    <p>Programming language</p>
+                </div>
+                <div class="tech-card">
+                    <div class="tech-icon">
+                        <svg viewBox="0 0 128 128" width="48" height="48">
+                            <path fill="#05998a" d="M64 0C28.654 0 0 28.654 0 64s28.654 64 64 64 64-28.654 64-64S99.346 0 64 0zm0 117.333C34.205 117.333 10.667 93.795 10.667 64S34.205 10.667 64 10.667 117.333 34.205 117.333 64 93.795 117.333 64 117.333z"/>
+                            <path fill="#05998a" d="M85.333 53.333H42.667L64 32l21.333 21.333zM64 96L42.667 74.667h42.666L64 96z"/>
+                        </svg>
+                    </div>
+                    <h3>FastAPI</h3>
+                    <p>Web framework</p>
+                </div>
+                <div class="tech-card">
+                    <div class="tech-icon">
+                        <svg viewBox="0 0 128 128" width="48" height="48">
+                            <path fill="#E44D26" d="M19.037 113.876L9.032 1.661h109.936l-10.016 112.198-45.019 12.48z"/>
+                            <path fill="#F16529" d="M64 116.8l36.378-10.086 8.559-95.878H64z"/>
+                            <path fill="#EBEBEB" d="M64 52.455H45.788l-1.257-14.094H64V24.356H27.325l.33 3.692 3.382 37.927H64zm0 35.743l-.061.017-15.327-4.14-.979-10.975H33.816l1.928 21.609 28.193 7.826.063-.017z"/>
+                            <path fill="#fff" d="M63.952 52.455v14.005h16.947l-1.597 17.849-15.35 4.143v14.319l28.215-7.82.207-2.325 3.234-36.233.335-3.938h-3.708zm0-28.099v14.005h35.716l.296-3.305.673-7.395.33-3.305z"/>
+                        </svg>
+                    </div>
+                    <h3>HTML/CSS</h3>
+                    <p>Page structure & styling</p>
+                </div>
+                <div class="tech-card">
+                    <div class="tech-icon">
+                        <svg viewBox="0 0 128 128" width="48" height="48">
+                            <path fill="#0277BD" d="M64.004 25.602c-17.067 0-27.73 8.53-32 25.597 6.398-8.531 13.867-11.73 22.398-9.597 4.871 1.214 8.352 4.748 12.207 8.66C72.883 56.629 80.145 64 96.004 64c17.066 0 27.73-8.531 32-25.602-6.399 8.536-13.867 11.735-22.399 9.602-4.87-1.215-8.347-4.753-12.207-8.664-6.27-6.367-13.53-13.738-29.394-13.734zM32.004 64c-17.066 0-27.73 8.531-32 25.602C6.402 81.066 13.87 77.867 22.402 80c4.871 1.215 8.352 4.753 12.207 8.664 6.274 6.367 13.536 13.734 29.395 13.734 17.066 0 27.73-8.53 32-25.597-6.399 8.531-13.867 11.73-22.399 9.597-4.87-1.214-8.347-4.748-12.207-8.66C55.128 71.371 47.868 64 32.004 64z"/>
+                        </svg>
+                    </div>
+                    <h3>VS Code</h3>
+                    <p>Code editor</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Challenges Section -->
+    <section id="challenges" class="section challenges">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-badge">Your Journey</span>
+                <h2>Workshop Challenges</h2>
+                <p>Complete 5 coding challenges to build the full application</p>
+            </div>
+            <div class="challenges-timeline">
+                <div class="challenge-item">
+                    <div class="challenge-number">1</div>
+                    <div class="challenge-content">
+                        <span class="challenge-badge done">Done for you</span>
+                        <h3>Load Movies</h3>
+                        <p>Learn how to read data from a JSON file</p>
+                    </div>
+                </div>
+                <div class="challenge-item">
+                    <div class="challenge-number">2</div>
+                    <div class="challenge-content">
+                        <span class="challenge-badge easy">Easy</span>
+                        <h3>Find Movie by ID</h3>
+                        <p>Use a for loop to find a specific movie</p>
+                    </div>
+                </div>
+                <div class="challenge-item">
+                    <div class="challenge-number">3</div>
+                    <div class="challenge-content">
+                        <span class="challenge-badge medium">Medium</span>
+                        <h3>Save Reviews</h3>
+                        <p>Store user reviews in a dictionary</p>
+                    </div>
+                </div>
+                <div class="challenge-item">
+                    <div class="challenge-number">4</div>
+                    <div class="challenge-content">
+                        <span class="challenge-badge medium">Medium</span>
+                        <h3>Calculate Ratings</h3>
+                        <p>Compute average star ratings</p>
+                    </div>
+                </div>
+                <div class="challenge-item">
+                    <div class="challenge-number">5</div>
+                    <div class="challenge-content">
+                        <span class="challenge-badge easy">Easy</span>
+                        <h3>Search Movies</h3>
+                        <p>Filter movies by title</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="section cta">
+        <div class="container">
+            <div class="cta-card">
+                <h2>Ready to Start Building?</h2>
+                <p>Clone the repository and follow the step-by-step guide</p>
+                <div class="cta-buttons">
+                    <a href="https://github.com/al-kaisi92/workshop" class="btn btn-primary btn-large">
+                        <svg viewBox="0 0 24 24" fill="currentColor" width="24" height="24">
+                            <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+                        </svg>
+                        View on GitHub
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-brand">
+                <svg class="footer-logo" viewBox="0 0 50 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M20.6 0L0 36h9.6L26.4 9 43.2 36H52.8L32.2 0H20.6z" fill="#A100FF"/>
+                </svg>
+                <span>Accenture Workshop 2025</span>
+            </div>
+            <p class="footer-text">Empowering the next generation of developers</p>
+            <div class="footer-links">
+                <a href="https://www.accenture.com" target="_blank">Accenture</a>
+                <span class="footer-dot"></span>
+                <a href="https://github.com/al-kaisi92/workshop" target="_blank">GitHub</a>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>
