@@ -1,14 +1,16 @@
 {% extends "base.html" %}
 
-{% block title %}CineRate - Movie Reviews{% endblock %}
+{% block title %}CineRate - Discover Amazing Movies{% endblock %}
 
 {% block content %}
 <div class="container">
+    <!-- Hero Section -->
     <header class="hero">
         <h1>Discover & Review <span class="highlight">Amazing Films</span></h1>
-        <p>Rate movies, write reviews, and explore what others think.</p>
+        <p>Rate movies, write reviews, and explore what others think about your favourite films.</p>
     </header>
 
+    <!-- Search Results Header (if searching) -->
     {% if search_query %}
     <div class="search-results-header">
         <h2>Search results for "{{ search_query }}"</h2>
@@ -16,12 +18,15 @@
     </div>
     {% endif %}
 
+    <!-- Movie Grid -->
     <div class="movie-grid">
         {% if movies %}
             {% for movie in movies %}
-            <div class="movie-card">
+            <article class="movie-card">
                 <a href="/movie/{{ movie.id }}">
-                    <img src="{{ movie.poster }}" alt="{{ movie.title }}" class="movie-poster">
+                    <div class="poster-wrapper">
+                        <img src="{{ movie.poster }}" alt="{{ movie.title }}" class="movie-poster" loading="lazy">
+                    </div>
                     <div class="movie-info">
                         <h3 class="movie-title">{{ movie.title }}</h3>
                         <div class="movie-meta">
@@ -38,11 +43,11 @@
                         </div>
                     </div>
                 </a>
-            </div>
+            </article>
             {% endfor %}
         {% else %}
             <div class="no-results">
-                <span class="icon">🎭</span>
+                <span class="icon">🎬</span>
                 <h3>No movies found</h3>
                 <p>Try a different search term</p>
             </div>
