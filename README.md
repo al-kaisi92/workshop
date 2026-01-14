@@ -1,6 +1,6 @@
 # Movie Review App Workshop
 
-A hands-on workshop where BTEC students (complete beginners) build a movie review web application using HTML, CSS, and JavaScript, then deploy it to GitHub Pages.
+A hands-on workshop where BTEC students (complete beginners) build a movie review web application using **Python** and **FastAPI**.
 
 ## Workshop Overview
 
@@ -8,20 +8,18 @@ A hands-on workshop where BTEC students (complete beginners) build a movie revie
 |------|---------|
 | **Duration** | 2 hours 45 minutes |
 | **Students** | ~20 per room |
-| **Mentors** | 4-5 per room (at least one JavaScript-strong) |
-| **Tech Stack** | HTML, CSS, JavaScript (no backend) |
-| **Deployment** | GitHub Pages (free static hosting) |
-| **Data Storage** | localStorage (browser-based) |
+| **Mentors** | 4-5 per room (at least one Python-strong) |
+| **Tech Stack** | Python, FastAPI, Jinja2, JSON |
+| **Platform** | Replit (online IDE) |
 
 ## What Students Will Build
 
-A Letterboxd-style movie review app with the following features:
+A movie review app with the following features:
 - Browse a catalog of movies
-- Click to view movie details in a modal
+- Click to view movie details
 - Submit reviews with star ratings (1-5)
 - See average ratings calculated from reviews
 - Search movies by title
-- Filter by genre and top-rated
 
 ## Repository Structure
 
@@ -32,12 +30,18 @@ workshop/
 ├── STUDENT_CHALLENGES.md        # Step-by-step challenges for students
 ├── WORKSHOP_SLIDES_OUTLINE.md   # Presentation slides outline
 ├── movie-review-app/            # Starter code (students work here)
-│   ├── index.html
-│   ├── css/
-│   │   └── style.css
-│   └── js/
-│       ├── app.js
-│       └── data.js              # Students complete TODOs here
+│   ├── main.py                  # FastAPI routes
+│   ├── database.py              # Students complete TODOs here
+│   ├── requirements.txt         # Python dependencies
+│   ├── data/
+│   │   └── movies.json          # Movie data
+│   ├── templates/               # Jinja2 HTML templates
+│   │   ├── base.html
+│   │   ├── index.html
+│   │   ├── movie.html
+│   │   └── error.html
+│   └── static/css/
+│       └── style.css
 ├── movie-review-app-solution/   # Complete working solution
 └── docs/                        # GitHub Pages site
 ```
@@ -49,31 +53,31 @@ workshop/
 | Time | Activity | Description |
 |------|----------|-------------|
 | 0:00-0:15 | Intro & Demo | Show the finished app, explain goals |
-| 0:15-0:30 | Code Walkthrough | Explain HTML/CSS/JS structure |
-| 0:30-0:45 | Setup | Help students download and open files |
+| 0:15-0:30 | Code Walkthrough | Explain project structure |
+| 0:30-0:45 | Setup | Help students get Replit running |
 | 0:45-2:30 | Development | Students complete challenges with mentor help |
-| 2:30-2:45 | Deployment | Help students deploy to GitHub Pages |
+| 2:30-2:45 | Wrap Up | Celebrate wins, share next steps |
 
 ### The Challenges
 
-Students work through 6 challenges in `js/data.js`, each marked with `TODO` comments:
+Students work through 5 challenges in `database.py`, each marked with `TODO` comments:
 
 | Challenge | Function | Difficulty | Time |
 |-----------|----------|------------|------|
-| 1 | `getMovies()` | Done for them | - |
-| 2 | `getMovieById()` | Easy | 10 min |
-| 3 | `saveReview()` | Medium | 20 min |
-| 4 | `getAverageRating()` | Medium | 15 min |
-| 5 | `searchMovies()` | Easy | 10 min |
-| 6 | `filterByGenre()` | Medium (Bonus) | 15 min |
+| 1 | `load_movies()` | Done for them | - |
+| 2 | `get_movie_by_id()` | Easy | 10 min |
+| 3 | `add_review()` | Medium | 15 min |
+| 4 | `get_average_rating()` | Medium | 15 min |
+| 5 | `search_movies()` | Easy | 10 min |
 
 ## Key Concepts Taught
 
-- **JavaScript Fundamentals**: Variables, functions, arrays, objects
-- **Array Methods**: `.find()`, `.filter()`, `.reduce()`, `.map()`
-- **localStorage**: Browser-based data persistence
-- **DOM Manipulation**: Updating the page dynamically
-- **Event Handling**: Responding to user interactions
+- **Python Fundamentals**: Variables, functions, loops, dictionaries
+- **Lists & Dictionaries**: Storing and accessing data
+- **for loops**: Iterating through collections
+- **if statements**: Conditional logic
+- **FastAPI basics**: Web routes and request handling
+- **JSON data**: Reading and using structured data
 
 ## For Mentors
 
@@ -81,7 +85,7 @@ Students work through 6 challenges in `js/data.js`, each marked with `TODO` comm
 
 1. **Read** `MENTOR_GUIDE.md` thoroughly
 2. **Complete** all challenges yourself
-3. **Test** GitHub Pages deployment with a test repo
+3. **Test** running the app locally
 4. **Review** common issues section in mentor guide
 
 ### During the Workshop
@@ -95,39 +99,42 @@ Students work through 6 challenges in `js/data.js`, each marked with `TODO` comm
 2. **Hint**: Point to the relevant hint in `STUDENT_CHALLENGES.md`
 3. **Show**: If still stuck (10+ mins), show a small example
 
-## GitHub Pages Deployment
+## Running Locally
 
-### For Students (End of Session)
+### Prerequisites
+- Python 3.8+
+- pip
 
-1. Create GitHub account (if needed)
-2. Create new repository named `movie-review-app`
-3. Upload all files (index.html, css/, js/)
-4. Go to Settings → Pages → Deploy from branch `main`
-5. Wait 1-2 minutes
-6. Visit: `https://USERNAME.github.io/movie-review-app`
-
-### Common Deployment Issues
-
-| Issue | Cause | Fix |
-|-------|-------|-----|
-| 404 error | Wrong file structure | Ensure `index.html` is in root |
-| CSS not loading | Wrong paths | Use relative paths: `href="css/style.css"` |
-| Page not updating | Cache | Hard refresh (Ctrl+Shift+R) |
-
-## Local Development
-
-No build tools required! Simply:
-
+### Setup
 ```bash
 # Clone the repo
 git clone git@github.com:al-kaisi92/workshop.git
+cd workshop
 
-# Open the starter app in your browser
-open movie-review-app/index.html
+# Run the solution
+cd movie-review-app-solution
+pip install -r requirements.txt
+uvicorn main:app --reload
 
-# Or open the solution
-open movie-review-app-solution/index.html
+# Visit http://127.0.0.1:8000
 ```
+
+### Run the starter code
+```bash
+cd movie-review-app
+pip install -r requirements.txt
+uvicorn main:app --reload
+```
+
+## Replit Setup
+
+For the workshop, students use Replit (no local setup needed):
+
+1. Go to **replit.com** and sign up
+2. Create new **Python** Repl
+3. Upload all files from `movie-review-app/`
+4. In `.replit` file, set: `run = "uvicorn main:app --host 0.0.0.0 --port 8080"`
+5. Click **Run**
 
 ## Workshop Materials
 
@@ -137,13 +144,14 @@ open movie-review-app-solution/index.html
 | `MENTOR_GUIDE.md` | Mentors | Troubleshooting, solutions, tips |
 | `WORKSHOP_SLIDES_OUTLINE.md` | Presenter | Slide deck content outline |
 
-## Browser DevTools
+## Common Issues
 
-Essential for debugging. Press F12 to open:
-
-- **Console Tab**: See JavaScript errors (red text)
-- **Test code**: Type `getMovies()` to see all movies
-- **Check storage**: `localStorage.getItem('movieReviews')`
+| Issue | Cause | Fix |
+|-------|-------|-----|
+| `None` when clicking movie | `get_movie_by_id` not implemented | Complete Challenge 2 |
+| Reviews disappear | `add_review` not implemented | Complete Challenge 3 |
+| Rating shows 0 | `get_average_rating` not implemented | Complete Challenge 4 |
+| `IndentationError` | Mixed tabs/spaces | Use consistent 4-space indentation |
 
 ## Questions?
 

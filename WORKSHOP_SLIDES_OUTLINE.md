@@ -5,7 +5,7 @@ Use this to create your presentation slides.
 ---
 
 ## Slide 1: Title
-**Build Your First Project**
+**Build Your First Web App**
 Movie Review App Workshop
 
 Accenture x BTEC Students
@@ -15,7 +15,7 @@ Accenture x BTEC Students
 ## Slide 2: What We're Building
 [Screenshot of completed app]
 
-A Letterboxd-style movie review app where you can:
+A movie review app where you can:
 - Browse movies
 - View movie details
 - Write reviews
@@ -38,13 +38,13 @@ A Letterboxd-style movie review app where you can:
 ## Slide 4: How Web Apps Work
 
 ```
-[Browser] → Request → [Server (FastAPI)] → [Database (JSON)]
+[Browser] → Request → [Server (Python/FastAPI)] → [Data (JSON)]
                     ←  Response  ←
 ```
 
 1. You type a URL
 2. Server finds the right code to run
-3. Code gets data from database
+3. Code gets data from JSON file
 4. Server sends back a web page
 
 ---
@@ -54,9 +54,9 @@ A Letterboxd-style movie review app where you can:
 ```
 movie-review-app/
 ├── main.py          ← Our routes (URLs)
-├── database.py      ← Talks to data
+├── database.py      ← Functions you'll write!
 ├── templates/       ← HTML pages
-├── static/          ← CSS styles
+├── static/css/      ← Styles
 └── data/movies.json ← Our movie data
 ```
 
@@ -110,11 +110,11 @@ Your mentor will help you!
 
 | Challenge | What You'll Build |
 |-----------|------------------|
-| 1-3 | Movies display on home & detail pages |
-| 4-5 | Users can submit reviews |
-| 6-7 | Average ratings appear |
-| 8-9 | Search works |
-| Bonus | Sorting, filtering, and more! |
+| 1 | Load movies (done for you!) |
+| 2 | Find a movie by ID |
+| 3 | Save reviews |
+| 4 | Calculate average ratings |
+| 5 | Search for movies |
 
 ---
 
@@ -155,7 +155,7 @@ for movie in movies:
 
 1. Open Replit
 2. Get set up with your mentor
-3. Start Challenge 1
+3. Start Challenge 2
 4. Have fun building!
 
 **Questions?** Ask your mentor!
@@ -164,12 +164,12 @@ for movie in movies:
 
 ## Slide 13: Wrap Up (End of Session)
 
-You built a web app!
+You built a web app with Python!
 
 Skills you used today:
 - Python programming
-- Web development
-- Working with data
+- Web development with FastAPI
+- Working with JSON data
 - Problem solving
 
 This is what real developers do every day.
@@ -181,6 +181,6 @@ This is what real developers do every day.
 Want to keep learning?
 - **freeCodeCamp.org** - Free coding courses
 - **Codecademy** - Interactive Python
-- **The Odin Project** - Full web dev curriculum
+- **Real Python** - Python tutorials
 
 Keep your Replit project - it's yours!
