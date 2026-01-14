@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+
+{% block title %}CineRate - Movie Reviews{% endblock %}
+
+{% block content %}
+<div class="container">
+    <header class="hero">
+        <h1>Discover & Review <span class="highlight">Amazing Films</span></h1>
+        <p>Rate movies, write reviews, and explore what others think.</p>
+    </header>
+
+    {% if search_query %}
+    <div class="search-results-header">
+        <h2>Search results for "{{ search_query }}"</h2>
+        <a href="/" class="clear-search">Clear search</a>
+    </div>
+    {% endif %}
+
+    <div class="movie-grid">
+        {% if movies %}
+            {% for movie in movies %}
+            <div class="movie-card">
+                <a href="/movie/{{ movie.id }}">
+                    <img src="{{ movie.poster }}" alt="{{ movie.title }}" class="movie-poster">
+                    <div class="movie-info">
+                        <h3 class="movie-title">{{ movie.title }}</h3>
+                        <div class="movie-meta">
+                            <span class="year">{{ movie.year }}</span>
+                            <span class="genre">{{ movie.genre }}</span>
+                        </div>
+                        <div class="movie-rating">
+                            {% if movie.avg_rating > 0 %}
+                                <span class="stars">★</span>
+                                <span class="rating-value">{{ movie.avg_rating }}</span>
+                            {% else %}
+                                <span class="no-rating">No reviews yet</span>
+                            {% endif %}
+                        </div>
+                    </div>
+                </a>
+            </div>
+            {% endfor %}
+        {% else %}
+            <div class="no-results">
+                <span class="icon">🎭</span>
+                <h3>No movies found</h3>
+                <p>Try a different search term</p>
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

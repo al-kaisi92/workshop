@@ -2,16 +2,16 @@
 
 ## How This Works
 
-All your challenges are in one file: `js/data.js`
+All your challenges are in one file: `database.py`
 
 Open it and look for the `TODO` comments. Complete each challenge in order!
 
 ---
 
-## Challenge 1: Get Movies (DONE!)
+## Challenge 1: Load Movies (DONE!)
 **Already completed for you!**
 
-Look at the `getMovies()` function to see how it works. Use it as a reference!
+Look at the `load_movies()` function to see how it works. Use it as a reference!
 
 ---
 
@@ -22,73 +22,63 @@ Look at the `getMovies()` function to see how it works. Use it as a reference!
 When someone clicks a movie card, we need to find that specific movie's data.
 
 ### The Function
-```javascript
-function getMovieById(id) {
-    // Your code here!
-}
+```python
+def get_movie_by_id(movie_id):
+    # Your code here!
+    pass
 ```
 
 ### What to Do
-1. Call `getMovies()` to get all movies
-2. Use `.find()` to locate the movie with matching id
-3. Return that movie
+1. Call `load_movies()` to get all movies
+2. Loop through the movies with `for movie in movies:`
+3. Check if `movie["id"]` equals `movie_id`
+4. If it matches, return that movie
+5. If no match found, return `None`
 
 ### Hints
-```javascript
-// The .find() method searches an array
-const movies = getMovies();
-const movie = movies.find(movie => movie.id === id);
-return movie;
+```python
+movies = load_movies()
+for movie in movies:
+    if movie["id"] == movie_id:
+        return movie
+return None
 ```
 
 ### Test It
-Click on any movie poster. The modal should open showing the movie's title, poster, and plot.
+Click on any movie poster. The movie detail page should load with the correct title, poster, and plot.
 
 ---
 
 ## Challenge 3: Save a Review
-**Difficulty:** Medium | **Time:** 20 mins
+**Difficulty:** Medium | **Time:** 15 mins
 
 ### Goal
-When someone submits the review form, save their review so it persists!
+When someone submits the review form, save their review!
 
 ### The Function
-```javascript
-function saveReview(movieId, review) {
-    // Your code here!
-}
+```python
+def add_review(movie_id, review):
+    # Your code here!
+    pass
 ```
 
 ### What to Do
-1. Get existing reviews from localStorage
-2. Parse the JSON (or create empty object if none)
-3. Add the review to the correct movie's array
-4. Save back to localStorage
+1. Check if `movie_id` exists in `reviews_storage`
+2. If not, create an empty list: `reviews_storage[movie_id] = []`
+3. Append the review: `reviews_storage[movie_id].append(review)`
 
 ### Hints
-```javascript
-// Get from localStorage
-const savedReviews = localStorage.getItem('movieReviews');
-const reviewsMap = savedReviews ? JSON.parse(savedReviews) : {};
-
-// Make sure this movie has an array
-if (!reviewsMap[movieId]) {
-    reviewsMap[movieId] = [];
-}
-
-// Add the review
-reviewsMap[movieId].push(review);
-
-// Save back
-localStorage.setItem('movieReviews', JSON.stringify(reviewsMap));
+```python
+if movie_id not in reviews_storage:
+    reviews_storage[movie_id] = []
+reviews_storage[movie_id].append(review)
 ```
 
 ### Test It
-1. Click a movie to open the modal
+1. Click a movie to open its detail page
 2. Fill in your name, select stars, write a comment
 3. Click "Submit Review"
 4. Your review should appear below the form!
-5. Refresh the page - your review should still be there!
 
 ---
 
@@ -99,42 +89,37 @@ localStorage.setItem('movieReviews', JSON.stringify(reviewsMap));
 Show the average star rating based on all reviews.
 
 ### The Function
-```javascript
-function getAverageRating(movieId) {
-    // Your code here!
-}
+```python
+def get_average_rating(movie_id):
+    # Your code here!
+    return 0
 ```
 
 ### What to Do
-1. Get the movie using `getMovieById()`
-2. If no movie or no reviews, return 0
-3. Add up all the ratings
-4. Divide by the number of reviews
-5. Return the result
+1. Get the movie using `get_movie_by_id(movie_id)`
+2. If no movie found, return `0`
+3. Get the reviews: `reviews = movie.get("reviews", [])`
+4. If no reviews (length is 0), return `0`
+5. Add up all the ratings using a loop
+6. Divide total by number of reviews
+7. Use `round(average, 1)` to round to 1 decimal place
 
 ### Hints
-```javascript
-const movie = getMovieById(movieId);
+```python
+movie = get_movie_by_id(movie_id)
+if movie is None:
+    return 0
 
-// Guard clause
-if (!movie || !movie.reviews || movie.reviews.length === 0) {
-    return 0;
-}
+reviews = movie.get("reviews", [])
+if len(reviews) == 0:
+    return 0
 
-// Sum all ratings
-let total = 0;
-for (const review of movie.reviews) {
-    total = total + review.rating;
-}
+total = 0
+for review in reviews:
+    total = total + review["rating"]
 
-// Calculate average
-return total / movie.reviews.length;
-```
-
-### Or use .reduce() (advanced):
-```javascript
-const total = movie.reviews.reduce((sum, review) => sum + review.rating, 0);
-return total / movie.reviews.length;
+average = total / len(reviews)
+return round(average, 1)
 ```
 
 ### Test It
@@ -151,26 +136,36 @@ return total / movie.reviews.length;
 Make the search bar work!
 
 ### The Function
-```javascript
-function searchMovies(query) {
-    // Your code here!
-}
+```python
+def search_movies(query):
+    # Your code here!
+    return load_movies()
 ```
 
 ### What to Do
-1. Get all movies
-2. Convert the query to lowercase (for case-insensitive search)
-3. Filter movies where the title includes the query
-4. Return the filtered list
+1. Get all movies: `movies = load_movies()`
+2. If query is empty, return all movies
+3. Convert query to lowercase: `query.lower()`
+4. Loop through movies
+5. Check if query is in the movie title (also lowercase)
+6. Add matching movies to a results list
+7. Return the results
 
 ### Hints
-```javascript
-const movies = getMovies();
-const lowerQuery = query.toLowerCase();
+```python
+movies = load_movies()
 
-return movies.filter(movie =>
-    movie.title.toLowerCase().includes(lowerQuery)
-);
+if query == "":
+    return movies
+
+query_lower = query.lower()
+results = []
+
+for movie in movies:
+    if query_lower in movie["title"].lower():
+        results.append(movie)
+
+return results
 ```
 
 ### Test It
@@ -180,107 +175,72 @@ return movies.filter(movie =>
 
 ---
 
-## Challenge 6: Filter by Genre (BONUS)
-**Difficulty:** Medium | **Time:** 15 mins
-
-### Goal
-Make the filter buttons work (Action, Drama, Sci-Fi, etc.)
-
-### The Function
-```javascript
-function filterByGenre(genre) {
-    // Your code here!
-}
-```
-
-### What to Do
-1. If genre is 'all', return all movies
-2. If genre is 'top-rated', return movies with average rating >= 4
-3. Otherwise, filter by genre name
-
-### Hints
-```javascript
-if (genre === 'all') {
-    return movies;
-}
-
-if (genre === 'top-rated') {
-    return movies.filter(movie => getAverageRating(movie.id) >= 4);
-}
-
-return movies.filter(movie =>
-    movie.genre.toLowerCase().includes(genre.toLowerCase())
-);
-```
-
-### Test It
-- Click "Action" → should show action movies
-- Click "Animation" → should show animated movies
-- Click "Top Rated" → should show movies with 4+ stars
-
----
-
 ## Finished Everything?
 
 Amazing work! You've built a complete web application!
 
 ### What You Learned
-- JavaScript fundamentals (functions, arrays, objects)
-- Array methods (find, filter, map, reduce)
-- localStorage for data persistence
-- DOM manipulation
-- Event handling
+- Python fundamentals (functions, loops, dictionaries)
+- Reading JSON data files
+- FastAPI for web routes
+- HTML templates with Jinja2
+- Form handling
+- Basic data processing
 
 ### Next Steps
-1. Deploy to GitHub Pages (instructions in README)
-2. Show a mentor to get your completion certificate!
-3. Try adding more features:
+1. Show a mentor to get your completion certificate!
+2. Try adding more features:
+   - Filter by genre
    - Sort by year
-   - Sort by rating
-   - Add more movies
-   - Change the color theme
+   - Add more movies to `movies.json`
 
 ---
 
 ## Quick Reference
 
-### Arrays
-```javascript
-// Create
-const nums = [1, 2, 3];
+### Dictionaries (like JavaScript objects)
+```python
+# Create
+movie = {
+    "title": "Batman",
+    "year": 2022
+}
 
-// Access
-nums[0]  // 1
-
-// Loop
-for (const num of nums) { }
-
-// Find one
-nums.find(n => n > 2)  // 3
-
-// Filter many
-nums.filter(n => n > 1)  // [2, 3]
-
-// Transform
-nums.map(n => n * 2)  // [2, 4, 6]
+# Access
+movie["title"]      # "Batman"
+movie.get("year")   # 2022
 ```
 
-### Objects
-```javascript
-const movie = {
-    title: "Batman",
-    year: 2022
-};
+### Lists (like JavaScript arrays)
+```python
+# Create
+movies = ["Batman", "Spider-Man"]
 
-movie.title      // "Batman"
-movie["year"]    // 2022
+# Loop
+for movie in movies:
+    print(movie)
+
+# Add item
+movies.append("Avatar")
 ```
 
-### localStorage
-```javascript
-// Save
-localStorage.setItem('key', JSON.stringify(data));
+### Loops
+```python
+# Loop through list
+for movie in movies:
+    print(movie["title"])
 
-// Load
-const data = JSON.parse(localStorage.getItem('key'));
+# Loop with counting
+total = 0
+for review in reviews:
+    total = total + review["rating"]
+```
+
+### If Statements
+```python
+if movie_id not in reviews_storage:
+    reviews_storage[movie_id] = []
+
+if len(reviews) == 0:
+    return 0
 ```
