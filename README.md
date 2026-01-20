@@ -150,10 +150,4 @@ uvicorn main:app --reload
 | `IndentationError` | Mixed tabs/spaces | Use consistent 4-space indentation |
 | `ModuleNotFoundError` | Dependencies not installed | Run `pip install -r requirements.txt` |
 
-## Questions?
 
-Contact Mo (workshop lead) for any questions or issues.
-
----
-
-**Built for Accenture x BTEC Students Workshop**
