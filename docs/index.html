@@ -23,6 +23,7 @@
             <div class="nav-links">
                 <a href="#about">About</a>
                 <a href="#tech">Tech Stack</a>
+                <a href="#setup">Setup</a>
                 <a href="#challenges">Challenges</a>
                 <a href="https://github.com/al-kaisi92/workshop" target="_blank" class="btn-github">
                     <svg viewBox="0 0 24 24" fill="currentColor" width="20" height="20">
@@ -170,6 +171,76 @@
                     </div>
                     <h3>VS Code</h3>
                     <p>Code editor</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Setup Section -->
+    <section id="setup" class="section setup">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-badge">Getting Started</span>
+                <h2>Setup Guide</h2>
+                <p>Follow these steps to set up your development environment</p>
+            </div>
+            <div class="setup-grid">
+                <div class="setup-card">
+                    <div class="setup-number">1</div>
+                    <h3>Install Python</h3>
+                    <div class="setup-tabs">
+                        <div class="tab-content">
+                            <h4>Windows</h4>
+                            <ol>
+                                <li>Go to <a href="https://python.org/downloads" target="_blank">python.org/downloads</a></li>
+                                <li>Download Python 3.x.x</li>
+                                <li>Run installer - <strong>Check "Add Python to PATH"</strong></li>
+                                <li>Verify: Open Command Prompt, type <code>python --version</code></li>
+                            </ol>
+                            <h4>Mac</h4>
+                            <ol>
+                                <li>Go to <a href="https://python.org/downloads" target="_blank">python.org/downloads</a></li>
+                                <li>Download Python 3.x.x</li>
+                                <li>Open the .pkg file and install</li>
+                                <li>Verify: Open Terminal, type <code>python3 --version</code></li>
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+                <div class="setup-card">
+                    <div class="setup-number">2</div>
+                    <h3>Install VS Code</h3>
+                    <ol>
+                        <li>Go to <a href="https://code.visualstudio.com" target="_blank">code.visualstudio.com</a></li>
+                        <li>Download for your OS</li>
+                        <li>Install and open VS Code</li>
+                        <li>Install Python extension (search "Python" in Extensions)</li>
+                    </ol>
+                </div>
+                <div class="setup-card">
+                    <div class="setup-number">3</div>
+                    <h3>Create Virtual Environment</h3>
+                    <div class="setup-tabs">
+                        <div class="tab-content">
+                            <h4>Windows</h4>
+                            <pre><code>python -m venv venv
+venv\Scripts\activate
+pip install -r requirements.txt</code></pre>
+                            <h4>Mac</h4>
+                            <pre><code>python3 -m venv venv
+source venv/bin/activate
+pip install -r requirements.txt</code></pre>
+                        </div>
+                    </div>
+                </div>
+                <div class="setup-card">
+                    <div class="setup-number">4</div>
+                    <h3>Run the App</h3>
+                    <ol>
+                        <li>Make sure <code>(venv)</code> is showing in terminal</li>
+                        <li>Run: <code>uvicorn main:app --reload</code></li>
+                        <li>Open browser: <a href="http://127.0.0.1:8000" target="_blank">http://127.0.0.1:8000</a></li>
+                    </ol>
                 </div>
             </div>
         </div>
