@@ -20,6 +20,7 @@ A movie review app with the following features:
 - Submit reviews with star ratings (1-5)
 - See average ratings calculated from reviews
 - Search movies by title
+- View Top 5 highest-rated movies
 
 ## Repository Structure
 
@@ -28,11 +29,12 @@ workshop/
 ├── README.md                    # This file
 ├── MENTOR_GUIDE.md              # Detailed guide for workshop mentors
 ├── STUDENT_CHALLENGES.md        # Step-by-step challenges for students
+├── Product Backlog - Movie Review App(Backlog).csv  # BTEC product backlog
 ├── slides/                      # PowerPoint presentation
 │   └── workshop-slides.pptx
 ├── movie-review-app/            # Starter code (students work here)
 │   ├── main.py                  # FastAPI routes
-│   ├── database.py              # Students complete TODOs here
+│   ├── database.py              # Students complete TODOs here (6 challenges)
 │   ├── requirements.txt         # Python dependencies
 │   ├── data/
 │   │   └── movies.json          # Movie data
@@ -57,7 +59,7 @@ workshop/
 
 ### The Challenges
 
-Students work through 5 challenges in `database.py`, each marked with `TODO` comments:
+Students work through 6 challenges in `database.py`, each marked with `TODO` comments:
 
 | Challenge | Function | Difficulty | Time |
 |-----------|----------|------------|------|
@@ -66,6 +68,7 @@ Students work through 5 challenges in `database.py`, each marked with `TODO` com
 | 3 | `add_review()` | Medium | 15 min |
 | 4 | `get_average_rating()` | Medium | 15 min |
 | 5 | `search_movies()` | Easy | 10 min |
+| 6 | `get_top_rated_movies()` | Medium | 15 min |
 
 ## Key Concepts Taught
 
@@ -73,6 +76,7 @@ Students work through 5 challenges in `database.py`, each marked with `TODO` com
 - **Lists & Dictionaries**: Storing and accessing data
 - **for loops**: Iterating through collections
 - **if statements**: Conditional logic
+- **Sorting**: Using `sorted()` with custom keys
 - **FastAPI basics**: Web routes and request handling
 - **JSON data**: Reading and using structured data
 
@@ -142,6 +146,7 @@ uvicorn main:app --reload
 | `None` when clicking movie | `get_movie_by_id` not implemented | Complete Challenge 2 |
 | Reviews disappear | `add_review` not implemented | Complete Challenge 3 |
 | Rating shows 0 | `get_average_rating` not implemented | Complete Challenge 4 |
+| Top 5 not showing | `get_top_rated_movies` not implemented or no reviews added | Complete Challenge 6, add some reviews first |
 | `IndentationError` | Mixed tabs/spaces | Use consistent 4-space indentation |
 | `ModuleNotFoundError` | Dependencies not installed | Run `pip install -r requirements.txt` |
 
