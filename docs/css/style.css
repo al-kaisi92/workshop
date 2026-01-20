@@ -1,6 +1,6 @@
 /* =============================================
    ACCENTURE WORKSHOP LANDING PAGE
-   Premium Design with Purple (#A100FF) Theme
+   Official Accenture Purple (#A100FF) Theme
    ============================================= */
 
 :root {
@@ -41,7 +41,7 @@ html {
 
 body {
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-    background: var(--gray-900);
+    background: var(--black);
     color: var(--white);
     line-height: 1.6;
     overflow-x: hidden;
@@ -59,6 +59,38 @@ a {
 }
 
 /* =============================================
+   ACCENTURE LOGO STYLE (>)
+   ============================================= */
+.accenture-gt {
+    font-size: 2rem;
+    font-weight: 900;
+    color: var(--accenture-purple);
+    line-height: 1;
+}
+
+.badge-gt {
+    color: var(--accenture-purple);
+    font-weight: 700;
+    margin-right: 0.5rem;
+}
+
+.footer-gt {
+    font-size: 1.5rem;
+    font-weight: 900;
+    color: var(--accenture-purple);
+}
+
+.cta-gt {
+    font-size: 6rem;
+    font-weight: 900;
+    color: rgba(255, 255, 255, 0.1);
+    position: absolute;
+    top: 20px;
+    right: 40px;
+    line-height: 1;
+}
+
+/* =============================================
    NAVBAR
    ============================================= */
 .navbar {
@@ -68,9 +100,9 @@ a {
     right: 0;
     z-index: 1000;
     padding: 1rem 2rem;
-    background: rgba(23, 23, 23, 0.8);
+    background: rgba(0, 0, 0, 0.9);
     backdrop-filter: blur(20px);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    border-bottom: 1px solid rgba(161, 0, 255, 0.2);
 }
 
 .nav-container {
@@ -84,23 +116,13 @@ a {
 .logo {
     display: flex;
     align-items: center;
-    gap: 0.75rem;
-}
-
-.accenture-logo {
-    height: 24px;
-    width: auto;
-}
-
-.logo-divider {
-    color: var(--gray-600);
-    font-weight: 200;
+    gap: 0.5rem;
 }
 
 .logo-text {
-    font-weight: 600;
-    font-size: 1rem;
-    color: var(--white);
+    font-size: 1.25rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
 }
 
 .nav-links {
@@ -111,12 +133,14 @@ a {
 
 .nav-links a {
     font-size: 0.9rem;
-    color: var(--gray-400);
-    transition: color 0.2s;
+    font-weight: 500;
+    opacity: 0.8;
+    transition: all 0.2s;
 }
 
 .nav-links a:hover {
-    color: var(--white);
+    opacity: 1;
+    color: var(--accenture-purple-light);
 }
 
 .btn-github {
@@ -124,15 +148,16 @@ a {
     align-items: center;
     gap: 0.5rem;
     padding: 0.5rem 1rem;
-    background: var(--gray-800);
-    border-radius: 8px;
-    font-weight: 500;
+    background: var(--accenture-purple);
+    border-radius: 6px;
+    font-weight: 600;
+    opacity: 1 !important;
     transition: all 0.2s;
 }
 
 .btn-github:hover {
-    background: var(--gray-700);
-    color: var(--white) !important;
+    background: var(--accenture-purple-dark);
+    transform: translateY(-2px);
 }
 
 /* =============================================
@@ -142,40 +167,52 @@ a {
     min-height: 100vh;
     display: flex;
     align-items: center;
-    padding: 8rem 2rem 4rem;
+    justify-content: space-between;
+    padding: 8rem 4rem 4rem;
     position: relative;
     overflow: hidden;
 }
 
 .hero-bg {
     position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background:
-        radial-gradient(ellipse 80% 50% at 50% -20%, rgba(161, 0, 255, 0.3), transparent),
-        radial-gradient(ellipse 60% 40% at 80% 60%, rgba(161, 0, 255, 0.15), transparent);
-    pointer-events: none;
+    inset: 0;
+    z-index: -1;
+}
+
+.hero-gradient {
+    position: absolute;
+    top: -50%;
+    right: -20%;
+    width: 80%;
+    height: 150%;
+    background: radial-gradient(ellipse at center, rgba(161, 0, 255, 0.15) 0%, transparent 70%);
+}
+
+.hero-pattern {
+    position: absolute;
+    inset: 0;
+    background-image:
+        linear-gradient(rgba(161, 0, 255, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(161, 0, 255, 0.03) 1px, transparent 1px);
+    background-size: 50px 50px;
 }
 
 .hero-content {
-    flex: 1;
     max-width: 600px;
-    position: relative;
     z-index: 1;
 }
 
 .hero-badge {
-    display: inline-block;
+    display: inline-flex;
+    align-items: center;
     padding: 0.5rem 1rem;
-    background: rgba(161, 0, 255, 0.15);
+    background: rgba(161, 0, 255, 0.1);
     border: 1px solid rgba(161, 0, 255, 0.3);
     border-radius: 50px;
     font-size: 0.85rem;
-    font-weight: 500;
-    color: var(--accenture-purple-light);
+    font-weight: 600;
     margin-bottom: 1.5rem;
+    color: var(--accenture-purple-light);
 }
 
 .hero h1 {
@@ -183,7 +220,7 @@ a {
     font-weight: 800;
     line-height: 1.1;
     margin-bottom: 1.5rem;
-    letter-spacing: -2px;
+    letter-spacing: -0.03em;
 }
 
 .gradient-text {
@@ -194,7 +231,7 @@ a {
 }
 
 .hero p {
-    font-size: 1.25rem;
+    font-size: 1.15rem;
     color: var(--gray-400);
     margin-bottom: 2rem;
     line-height: 1.7;
@@ -211,11 +248,10 @@ a {
     align-items: center;
     gap: 0.5rem;
     padding: 0.875rem 1.5rem;
-    border-radius: 12px;
+    border-radius: 8px;
     font-weight: 600;
-    font-size: 1rem;
-    transition: all 0.3s;
-    cursor: pointer;
+    font-size: 0.95rem;
+    transition: all 0.2s;
 }
 
 .btn-primary {
@@ -236,57 +272,59 @@ a {
 }
 
 .btn-secondary:hover {
-    background: var(--gray-800);
-    border-color: var(--gray-600);
+    border-color: var(--accenture-purple);
+    background: rgba(161, 0, 255, 0.1);
 }
 
 .hero-stats {
     display: flex;
-    gap: 3rem;
+    align-items: center;
+    gap: 2rem;
 }
 
 .stat {
-    display: flex;
-    flex-direction: column;
+    text-align: left;
 }
 
 .stat-number {
+    display: block;
     font-size: 2rem;
     font-weight: 800;
-    color: var(--white);
+    color: var(--accenture-purple-light);
 }
 
 .stat-label {
     font-size: 0.85rem;
     color: var(--gray-500);
     text-transform: uppercase;
-    letter-spacing: 1px;
+    letter-spacing: 0.05em;
+}
+
+.stat-divider {
+    width: 1px;
+    height: 40px;
+    background: var(--gray-800);
 }
 
 .hero-visual {
-    flex: 1;
-    display: flex;
-    justify-content: center;
-    position: relative;
-    z-index: 1;
+    flex-shrink: 0;
 }
 
 .code-window {
-    background: var(--gray-800);
-    border-radius: 16px;
+    background: var(--gray-900);
+    border-radius: 12px;
+    border: 1px solid var(--gray-800);
     overflow: hidden;
-    box-shadow: var(--shadow-xl);
-    border: 1px solid var(--gray-700);
-    width: 100%;
-    max-width: 500px;
+    box-shadow: var(--shadow-xl), 0 0 60px rgba(161, 0, 255, 0.1);
+    width: 480px;
 }
 
 .code-header {
     display: flex;
     align-items: center;
-    gap: 0.5rem;
-    padding: 1rem 1.25rem;
-    background: var(--gray-900);
+    gap: 8px;
+    padding: 12px 16px;
+    background: var(--gray-800);
     border-bottom: 1px solid var(--gray-700);
 }
 
@@ -308,15 +346,17 @@ a {
 
 .code-content {
     padding: 1.5rem;
-    font-family: 'SF Mono', 'Fira Code', monospace;
+    font-family: 'Monaco', 'Consolas', monospace;
     font-size: 0.9rem;
     line-height: 1.8;
+    color: var(--gray-300);
+    margin: 0;
     overflow-x: auto;
 }
 
-.code-content .keyword { color: #FF79C6; }
-.code-content .function { color: #50FA7B; }
-.code-content .string { color: #F1FA8C; }
+.code-content .keyword { color: var(--accenture-purple-light); }
+.code-content .function { color: #61AFEF; }
+.code-content .string { color: #98C379; }
 
 /* =============================================
    SECTIONS
@@ -327,33 +367,36 @@ a {
 
 .section-header {
     text-align: center;
-    max-width: 600px;
-    margin: 0 auto 4rem;
+    margin-bottom: 4rem;
 }
 
 .section-badge {
-    display: inline-block;
-    padding: 0.375rem 0.875rem;
-    background: rgba(161, 0, 255, 0.15);
+    display: inline-flex;
+    align-items: center;
+    padding: 0.4rem 1rem;
+    background: rgba(161, 0, 255, 0.1);
+    border: 1px solid rgba(161, 0, 255, 0.2);
     border-radius: 50px;
     font-size: 0.8rem;
     font-weight: 600;
     color: var(--accenture-purple-light);
-    text-transform: uppercase;
-    letter-spacing: 1px;
     margin-bottom: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
 }
 
 .section-header h2 {
     font-size: 2.5rem;
     font-weight: 800;
     margin-bottom: 1rem;
-    letter-spacing: -1px;
+    letter-spacing: -0.02em;
 }
 
 .section-header p {
-    color: var(--gray-400);
     font-size: 1.1rem;
+    color: var(--gray-400);
+    max-width: 600px;
+    margin: 0 auto;
 }
 
 /* About Section */
@@ -363,7 +406,7 @@ a {
 
 .features-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
     gap: 1.5rem;
 }
 
@@ -371,14 +414,15 @@ a {
     background: var(--gray-800);
     padding: 2rem;
     border-radius: 16px;
+    text-align: center;
     border: 1px solid var(--gray-700);
     transition: all 0.3s;
 }
 
 .feature-card:hover {
-    transform: translateY(-4px);
     border-color: var(--accenture-purple);
-    box-shadow: 0 0 30px rgba(161, 0, 255, 0.2);
+    transform: translateY(-4px);
+    box-shadow: 0 20px 40px rgba(161, 0, 255, 0.1);
 }
 
 .feature-icon {
@@ -387,14 +431,14 @@ a {
 }
 
 .feature-card h3 {
-    font-size: 1.25rem;
+    font-size: 1.1rem;
     font-weight: 700;
     margin-bottom: 0.5rem;
 }
 
 .feature-card p {
     color: var(--gray-400);
-    font-size: 0.95rem;
+    font-size: 0.9rem;
 }
 
 /* Tech Section */
@@ -454,6 +498,7 @@ a {
     border-radius: 16px;
     border: 1px solid var(--gray-700);
     position: relative;
+    transition: all 0.3s;
 }
 
 .setup-card:hover {
@@ -567,6 +612,7 @@ a {
     height: 12px;
     background: var(--accenture-purple);
     border-radius: 50%;
+    box-shadow: 0 0 20px rgba(161, 0, 255, 0.5);
 }
 
 .challenge-number {
@@ -687,7 +733,7 @@ a {
 .footer {
     background: var(--black);
     padding: 3rem 2rem;
-    border-top: 1px solid var(--gray-800);
+    border-top: 1px solid rgba(161, 0, 255, 0.2);
 }
 
 .footer-container {
@@ -703,12 +749,9 @@ a {
 .footer-brand {
     display: flex;
     align-items: center;
-    gap: 0.75rem;
-    font-weight: 600;
-}
-
-.footer-logo {
-    height: 20px;
+    gap: 0.5rem;
+    font-size: 1.1rem;
+    font-weight: 700;
 }
 
 .footer-text {
@@ -739,6 +782,12 @@ a {
     border-radius: 50%;
 }
 
+.footer-copyright {
+    color: var(--gray-600);
+    font-size: 0.8rem;
+    margin-top: 1rem;
+}
+
 /* =============================================
    RESPONSIVE
    ============================================= */
@@ -746,7 +795,7 @@ a {
     .hero {
         flex-direction: column;
         text-align: center;
-        padding-top: 6rem;
+        padding-top: 8rem;
     }
 
     .hero-content {
@@ -768,11 +817,20 @@ a {
     .hero-visual {
         margin-top: 3rem;
     }
+
+    .code-window {
+        width: 100%;
+        max-width: 480px;
+    }
 }
 
 @media (max-width: 768px) {
     .nav-links {
         display: none;
+    }
+
+    .hero {
+        padding: 6rem 1.5rem 3rem;
     }
 
     .hero h1 {
@@ -785,11 +843,20 @@ a {
 
     .hero-buttons {
         flex-direction: column;
+        align-items: center;
     }
 
     .hero-stats {
         flex-wrap: wrap;
-        gap: 2rem;
+        gap: 1.5rem;
+    }
+
+    .stat-divider {
+        display: none;
+    }
+
+    .section {
+        padding: 4rem 1.5rem;
     }
 
     .section-header h2 {
@@ -804,6 +871,12 @@ a {
         font-size: 1.75rem;
     }
 
+    .cta-gt {
+        font-size: 4rem;
+        top: 10px;
+        right: 20px;
+    }
+
     .challenge-item {
         margin-left: 0;
         padding-left: 1.5rem;
@@ -812,7 +885,7 @@ a {
 
 @media (max-width: 480px) {
     .hero-stats {
-        gap: 1.5rem;
+        gap: 1rem;
     }
 
     .stat-number {
@@ -820,7 +893,8 @@ a {
     }
 
     .features-grid,
-    .tech-grid {
+    .tech-grid,
+    .setup-grid {
         grid-template-columns: 1fr;
     }
 }
@@ -839,9 +913,18 @@ a {
 
 @keyframes glow {
     0%, 100% { box-shadow: 0 0 20px rgba(161, 0, 255, 0.3); }
-    50% { box-shadow: 0 0 40px rgba(161, 0, 255, 0.5); }
+    50% { box-shadow: 0 0 40px rgba(161, 0, 255, 0.6); }
 }
 
 .challenge-item::before {
     animation: glow 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.7; }
+}
+
+.accenture-gt {
+    animation: pulse 3s ease-in-out infinite;
 }
