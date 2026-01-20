@@ -10,6 +10,25 @@
         <p>Rate movies, write reviews, and explore what others think about your favourite films.</p>
     </header>
 
+    <!-- Top 5 Rated Movies Section -->
+    {% if top_movies and not search_query %}
+    <section class="top-rated-section">
+        <h2 class="section-title">🏆 Top 5 Highest Rated</h2>
+        <div class="top-rated-list">
+            {% for movie in top_movies %}
+            <a href="/movie/{{ movie.id }}" class="top-rated-item">
+                <span class="rank">#{{ loop.index }}</span>
+                <img src="{{ movie.poster }}" alt="{{ movie.title }}" class="top-rated-poster">
+                <div class="top-rated-info">
+                    <span class="top-rated-title">{{ movie.title }}</span>
+                    <span class="top-rated-rating">★ {{ movie.avg_rating }}</span>
+                </div>
+            </a>
+            {% endfor %}
+        </div>
+    </section>
+    {% endif %}
+
     <!-- Search Results Header (if searching) -->
     {% if search_query %}
     <div class="search-results-header">

@@ -175,6 +175,56 @@ return results
 
 ---
 
+## Challenge 6: Top 5 Highest Rated
+**Difficulty:** Medium | **Time:** 15 mins
+
+### Goal
+Show the user's top 5 highest-rated movies on the home page!
+
+### The Function
+```python
+def get_top_rated_movies(limit=5):
+    # Your code here!
+    return []
+```
+
+### What to Do
+1. Get all movies: `movies = load_movies()`
+2. Create an empty list for movies with ratings
+3. Loop through each movie
+4. Get the average rating using `get_average_rating(movie["id"])`
+5. Only include movies that have reviews (rating > 0)
+6. Add the rating to the movie: `movie["avg_rating"] = rating`
+7. Append the movie to your list
+8. Sort the list by rating (highest first)
+9. Return only the first `limit` movies
+
+### Hints
+```python
+movies = load_movies()
+rated_movies = []
+
+for movie in movies:
+    rating = get_average_rating(movie["id"])
+    if rating > 0:
+        movie["avg_rating"] = rating
+        rated_movies.append(movie)
+
+# Sort by rating, highest first
+sorted_movies = sorted(rated_movies, key=lambda m: m["avg_rating"], reverse=True)
+
+# Return only the top 'limit' movies
+return sorted_movies[:limit]
+```
+
+### Test It
+1. First, add reviews to a few movies with different ratings
+2. Go back to the home page
+3. You should see a "Top 5 Highest Rated" section appear
+4. Movies should be ranked from highest to lowest rating
+
+---
+
 ## Finished Everything?
 
 Amazing work! You've built a complete web application!

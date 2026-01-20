@@ -2,7 +2,7 @@ from fastapi import FastAPI, Request, Form
 from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
-from database import load_movies, get_movie_by_id, add_review, get_average_rating, search_movies
+from database import load_movies, get_movie_by_id, add_review, get_average_rating, search_movies, get_top_rated_movies
 
 app = FastAPI()
 
@@ -22,9 +22,13 @@ def home(request: Request):
     for movie in movies:
         movie["avg_rating"] = get_average_rating(movie["id"])
 
+    # Get top rated movies for the Top 5 section
+    top_movies = get_top_rated_movies(5)
+
     return templates.TemplateResponse("index.html", {
         "request": request,
-        "movies": movies
+        "movies": movies,
+        "top_movies": top_movies
     })
 
 

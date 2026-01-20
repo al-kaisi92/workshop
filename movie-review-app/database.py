@@ -120,3 +120,31 @@ def search_movies(query):
     """
     # TODO: Write your code here!
     return load_movies()
+
+
+def get_top_rated_movies(limit=5):
+    """
+    Get the top rated movies based on average review ratings.
+
+    CHALLENGE 6 - YOUR TURN!
+
+    Args:
+        limit (int): How many movies to return (default 5)
+
+    Returns:
+        list: The top rated movies, sorted from highest to lowest
+
+    Hints:
+        1. Get all movies using load_movies()
+        2. Create an empty list for movies with ratings
+        3. Loop through each movie
+        4. Get the average rating using get_average_rating(movie["id"])
+        5. Only include movies that have reviews (rating > 0)
+        6. Add the rating to the movie: movie["avg_rating"] = rating
+        7. Append the movie to your list
+        8. Sort the list by avg_rating (highest first)
+           Hint: Use sorted() with key=lambda m: m["avg_rating"], reverse=True
+        9. Return only the first 'limit' movies using [:limit]
+    """
+    # TODO: Write your code here!
+    return []

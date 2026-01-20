@@ -176,6 +176,25 @@ def search_movies(query):
 - Run `pip install -r requirements.txt`
 - Try `python -m uvicorn main:app --reload`
 
+### Issue 9: Top 5 section not showing
+**Cause:** `get_top_rated_movies()` returning empty list or not implemented
+
+**Fix:**
+```python
+def get_top_rated_movies(limit=5):
+    movies = load_movies()
+    rated_movies = []
+    for movie in movies:
+        rating = get_average_rating(movie["id"])
+        if rating > 0:
+            movie["avg_rating"] = rating
+            rated_movies.append(movie)
+    sorted_movies = sorted(rated_movies, key=lambda m: m["avg_rating"], reverse=True)
+    return sorted_movies[:limit]
+```
+
+**Note:** The Top 5 section only appears when there are movies with reviews. Make sure students have completed Challenge 3 (add_review) and Challenge 4 (get_average_rating) first, and have added some reviews.
+
 ---
 
 ## Challenge Solutions (For Your Reference Only!)
@@ -226,6 +245,22 @@ def search_movies(query):
     return results
 ```
 
+### Challenge 6: get_top_rated_movies
+```python
+def get_top_rated_movies(limit=5):
+    movies = load_movies()
+    rated_movies = []
+
+    for movie in movies:
+        rating = get_average_rating(movie["id"])
+        if rating > 0:
+            movie["avg_rating"] = rating
+            rated_movies.append(movie)
+
+    sorted_movies = sorted(rated_movies, key=lambda m: m["avg_rating"], reverse=True)
+    return sorted_movies[:limit]
+```
+
 ---
 
 ## VS Code Setup Guide
@@ -268,11 +303,11 @@ uvicorn main:app --reload
 | 2 hours | Setup complete | Everyone has app running |
 | 1.5 hours | Challenge 2-3 | Fast students on reviews |
 | 1 hour | Challenge 3-4 | Most have working reviews |
-| 30 mins | Challenge 5 | Search working |
+| 30 mins | Challenge 5-6 | Search and Top 5 working |
 | 15 mins | Wrap up | Celebrate, show next steps |
 
 **Fast students:** Point them to bonus ideas (filter by genre, add movies)
-**Struggling students:** Focus on Challenges 2-4 (core functionality)
+**Struggling students:** Focus on Challenges 2-4 (core functionality). Challenge 6 is optional if time runs short.
 
 ---
 

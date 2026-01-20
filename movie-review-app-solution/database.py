@@ -96,3 +96,22 @@ def search_movies(query):
             results.append(movie)
 
     return results
+
+
+def get_top_rated_movies(limit=5):
+    """
+    Get the top rated movies based on average review ratings.
+
+    CHALLENGE 6 - SOLUTION
+    """
+    movies = load_movies()
+    rated_movies = []
+
+    for movie in movies:
+        rating = get_average_rating(movie["id"])
+        if rating > 0:
+            movie["avg_rating"] = rating
+            rated_movies.append(movie)
+
+    sorted_movies = sorted(rated_movies, key=lambda m: m["avg_rating"], reverse=True)
+    return sorted_movies[:limit]
