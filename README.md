@@ -149,5 +149,3 @@ uvicorn main:app --reload
 | Top 5 not showing | `get_top_rated_movies` not implemented or no reviews added | Complete Challenge 6, add some reviews first |
 | `IndentationError` | Mixed tabs/spaces | Use consistent 4-space indentation |
 | `ModuleNotFoundError` | Dependencies not installed | Run `pip install -r requirements.txt` |
-
-
