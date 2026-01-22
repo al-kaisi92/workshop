@@ -683,6 +683,13 @@ a {
     line-height: 1.7;
 }
 
+.review-date {
+    color: var(--gray-500);
+    font-size: 0.85rem;
+    margin-top: 0.75rem;
+    font-style: italic;
+}
+
 .no-reviews {
     color: var(--gray-500);
     text-align: center;

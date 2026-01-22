@@ -44,7 +44,7 @@
                 BTEC Workshop 2025
             </div>
             <h1>Build Your First<br><span class="gradient-text">Web Application</span></h1>
-            <p>A hands-on workshop where you'll create a movie review app using Python, FastAPI & SQLite. No experience required.</p>
+            <p>A hands-on workshop where you'll create a movie review app using Python, FastAPI & SQLAlchemy. No experience required.</p>
             <div class="hero-buttons">
                 <a href="https://github.com/al-kaisi92/workshop" class="btn btn-primary">
                     Get Started
@@ -80,13 +80,13 @@
                     <span class="code-title">database.py</span>
                 </div>
                 <pre class="code-content"><code><span class="keyword">def</span> <span class="function">get_movie_by_id</span>(movie_id):
-    connection = get_connection()
-    cursor = connection.cursor()
-    cursor.execute(<span class="string">"SELECT * FROM movies WHERE id = ?"</span>, (movie_id,))
-    row = cursor.fetchone()
-    <span class="keyword">if</span> row <span class="keyword">is</span> <span class="keyword">None</span>:
+    session = get_session()
+    movie = session.query(Movie).filter(
+        Movie.id == movie_id
+    ).first()
+    <span class="keyword">if</span> movie <span class="keyword">is</span> <span class="keyword">None</span>:
         <span class="keyword">return</span> <span class="keyword">None</span>
-    <span class="keyword">return</span> dict(row)</code></pre>
+    <span class="keyword">return</span> movie.to_dict()</code></pre>
             </div>
         </div>
     </header>
@@ -101,34 +101,72 @@
             </div>
             <div class="features-grid">
                 <div class="feature-card">
-                    <div class="feature-icon">🎬</div>
+                    <div class="feature-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="32" height="32">
+                            <rect x="2" y="2" width="20" height="20" rx="2.18" ry="2.18"></rect>
+                            <line x1="7" y1="2" x2="7" y2="22"></line>
+                            <line x1="17" y1="2" x2="17" y2="22"></line>
+                            <line x1="2" y1="12" x2="22" y2="12"></line>
+                            <line x1="2" y1="7" x2="7" y2="7"></line>
+                            <line x1="2" y1="17" x2="7" y2="17"></line>
+                            <line x1="17" y1="17" x2="22" y2="17"></line>
+                            <line x1="17" y1="7" x2="22" y2="7"></line>
+                        </svg>
+                    </div>
                     <h3>Browse Movies</h3>
                     <p>Display a catalog of 12 movies with posters, titles, and genres</p>
                 </div>
                 <div class="feature-card">
-                    <div class="feature-icon">⭐</div>
+                    <div class="feature-icon">
+                        <svg viewBox="0 0 24 24" fill="currentColor" width="32" height="32">
+                            <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+                        </svg>
+                    </div>
                     <h3>Star Ratings</h3>
                     <p>Rate movies 1-5 stars and see average ratings</p>
                 </div>
                 <div class="feature-card">
-                    <div class="feature-icon">✍️</div>
+                    <div class="feature-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="32" height="32">
+                            <path d="M12 19l7-7 3 3-7 7-3-3z"></path>
+                            <path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"></path>
+                            <path d="M2 2l7.586 7.586"></path>
+                            <circle cx="11" cy="11" r="2"></circle>
+                        </svg>
+                    </div>
                     <h3>Write Reviews</h3>
                     <p>Submit reviews and read what others think</p>
                 </div>
                 <div class="feature-card">
-                    <div class="feature-icon">🔍</div>
+                    <div class="feature-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="32" height="32">
+                            <circle cx="11" cy="11" r="8"></circle>
+                            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                        </svg>
+                    </div>
                     <h3>Search Movies</h3>
                     <p>Find movies by searching their titles</p>
                 </div>
                 <div class="feature-card">
-                    <div class="feature-icon">🏆</div>
+                    <div class="feature-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="32" height="32">
+                            <circle cx="12" cy="8" r="6"></circle>
+                            <path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11"></path>
+                        </svg>
+                    </div>
                     <h3>Top 5 Rated</h3>
                     <p>See the highest-rated movies based on reviews</p>
                 </div>
                 <div class="feature-card">
-                    <div class="feature-icon">🗄️</div>
-                    <h3>SQLite Database</h3>
-                    <p>Learn real database skills with SQL queries</p>
+                    <div class="feature-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="32" height="32">
+                            <ellipse cx="12" cy="5" rx="9" ry="3"></ellipse>
+                            <path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"></path>
+                            <path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"></path>
+                        </svg>
+                    </div>
+                    <h3>SQLAlchemy ORM</h3>
+                    <p>Learn industry-standard database skills</p>
                 </div>
             </div>
         </div>

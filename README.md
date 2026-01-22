@@ -9,7 +9,7 @@ A hands-on workshop where BTEC students (complete beginners) build a movie revie
 | **Duration** | 2 hours 45 minutes |
 | **Students** | ~20 per room |
 | **Mentors** | 4-5 per room (at least one Python-strong) |
-| **Tech Stack** | Python, FastAPI, Jinja2, SQLite |
+| **Tech Stack** | Python, FastAPI, Jinja2, SQLAlchemy, SQLite |
 | **Tools** | VS Code, Python 3.8+ |
 
 ## What Students Will Build
@@ -83,8 +83,9 @@ Students work through challenges in `database.py`, each marked with `TODO` comme
 ## Key Concepts Taught
 
 - **Python Fundamentals**: Variables, functions, loops, dictionaries
-- **SQLite Database**: Creating tables, inserting data, querying data
-- **SQL Commands**: SELECT, INSERT, DELETE, WHERE clauses
+- **SQLAlchemy ORM**: Industry-standard database library for Python
+- **Database Models**: Representing tables as Python classes
+- **Sessions**: Managing database connections
 - **Lists & Dictionaries**: Storing and accessing data
 - **for loops**: Iterating through collections
 - **if statements**: Conditional logic

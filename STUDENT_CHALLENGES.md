@@ -6,7 +6,8 @@ All your challenges are in one file: `database.py`
 
 Open it and look for the `TODO` comments. Complete each challenge in order!
 
-**This app uses SQLite** - a real database that stores data in a file called `movies.db`.
+**This app uses SQLAlchemy** - a popular Python library for working with databases.
+The database file is called `movies.db` and it's created automatically when you run the app.
 
 ---
 
@@ -14,9 +15,9 @@ Open it and look for the `TODO` comments. Complete each challenge in order!
 **Already completed for you!**
 
 Look at the `load_movies()` function to see how it works. It shows you:
-- How to connect to a SQLite database
-- How to run a SELECT query
-- How to convert results to dictionaries
+- How to create a session (connection to the database)
+- How to query data using `session.query(Model).all()`
+- How to convert objects to dictionaries
 
 Use it as a reference for the other challenges!
 
@@ -36,33 +37,28 @@ def get_movie_by_id(movie_id):
 ```
 
 ### What to Do
-1. Create a connection: `connection = get_connection()`
-2. Get a cursor: `cursor = connection.cursor()`
-3. Run the SELECT query: `cursor.execute("SELECT * FROM movies WHERE id = ?", (movie_id,))`
-4. Get ONE result: `row = cursor.fetchone()`
-5. Check if movie was found: `if row is None: return None`
-6. Convert to dictionary: `movie = dict(row)`
-7. Add reviews: `movie["reviews"] = get_reviews_for_movie(movie_id)`
-8. Close connection: `connection.close()`
-9. Return the movie!
+1. Create a session: `session = get_session()`
+2. Query the movie using filter:
+   `movie = session.query(Movie).filter(Movie.id == movie_id).first()`
+3. Check if movie was found: `if movie is None: return None`
+4. Convert to dictionary: `result = movie.to_dict()`
+5. Close session: `session.close()`
+6. Return the result
 
 ### Hints
 ```python
-connection = get_connection()
-cursor = connection.cursor()
+session = get_session()
 
-cursor.execute("SELECT * FROM movies WHERE id = ?", (movie_id,))
-row = cursor.fetchone()
+try:
+    movie = session.query(Movie).filter(Movie.id == movie_id).first()
 
-if row is None:
-    connection.close()
-    return None
+    if movie is None:
+        return None
 
-movie = dict(row)
-movie["reviews"] = get_reviews_for_movie(movie_id)
+    return movie.to_dict()
 
-connection.close()
-return movie
+finally:
+    session.close()
 ```
 
 ### Test It
@@ -84,24 +80,29 @@ def add_review(movie_id, review):
 ```
 
 ### What to Do
-1. Create a connection: `connection = get_connection()`
-2. Get a cursor: `cursor = connection.cursor()`
-3. Run the INSERT query with the review data
-4. **COMMIT the changes**: `connection.commit()` (very important!)
-5. Close connection: `connection.close()`
+1. Create a session: `session = get_session()`
+2. Create a Review object with the data
+3. Add it to the session: `session.add(new_review)`
+4. Commit changes: `session.commit()`
+5. Close session: `session.close()`
 
 ### Hints
 ```python
-connection = get_connection()
-cursor = connection.cursor()
+session = get_session()
 
-cursor.execute("""
-    INSERT INTO reviews (movie_id, reviewer_name, rating, comment)
-    VALUES (?, ?, ?, ?)
-""", (movie_id, review["name"], review["rating"], review["comment"]))
+try:
+    new_review = Review(
+        movie_id=movie_id,
+        reviewer_name=review["name"],
+        rating=review["rating"],
+        comment=review["comment"]
+    )
 
-connection.commit()  # Don't forget this!
-connection.close()
+    session.add(new_review)
+    session.commit()
+
+finally:
+    session.close()
 ```
 
 ### Test It
@@ -126,15 +127,22 @@ def get_average_rating(movie_id):
 ```
 
 ### What to Do
-1. Get reviews: `reviews = get_reviews_for_movie(movie_id)`
-2. If no reviews (length is 0), return `0`
-3. Add up all the ratings using a loop
-4. Divide total by number of reviews
-5. Use `round(average, 1)` to round to 1 decimal place
+1. Get movie: `movie = get_movie_by_id(movie_id)`
+2. Check if movie exists: `if movie is None: return 0`
+3. Get reviews: `reviews = movie.get("reviews", [])`
+4. If no reviews (length is 0), return `0`
+5. Add up all the ratings using a loop
+6. Divide total by number of reviews
+7. Use `round(average, 1)` to round to 1 decimal place
 
 ### Hints
 ```python
-reviews = get_reviews_for_movie(movie_id)
+movie = get_movie_by_id(movie_id)
+
+if movie is None:
+    return 0
+
+reviews = movie.get("reviews", [])
 
 if len(reviews) == 0:
     return 0
@@ -302,8 +310,10 @@ def count_reviews(movie_id):
 
 ### Hints
 ```python
-reviews = get_reviews_for_movie(movie_id)
-return len(reviews)
+movie = get_movie_by_id(movie_id)
+if movie is None:
+    return 0
+return len(movie.get("reviews", []))
 ```
 
 ---
@@ -351,13 +361,17 @@ def delete_review(review_id):
 
 ### Hints
 ```python
-connection = get_connection()
-cursor = connection.cursor()
+session = get_session()
 
-cursor.execute("DELETE FROM reviews WHERE id = ?", (review_id,))
+try:
+    review = session.query(Review).filter(Review.id == review_id).first()
 
-connection.commit()
-connection.close()
+    if review:
+        session.delete(review)
+        session.commit()
+
+finally:
+    session.close()
 ```
 
 ---
@@ -368,12 +382,12 @@ Amazing work! You've built a complete web application with a real database!
 
 ### What You Learned
 - Python fundamentals (functions, loops, dictionaries)
-- **SQLite database** - a real database used in production apps!
-- **SQL queries** - SELECT, INSERT, DELETE
+- **SQLAlchemy ORM** - industry-standard database library
+- **Database Models** - representing tables as Python classes
+- **Sessions** - managing database connections
 - FastAPI for web routes
 - HTML templates with Jinja2
 - Form handling
-- Basic data processing
 
 ### Next Steps
 1. Show a mentor to get your completion certificate!
@@ -383,37 +397,37 @@ Amazing work! You've built a complete web application with a real database!
 
 ## Quick Reference
 
-### SQL Commands
-```sql
--- Get all movies
-SELECT * FROM movies
+### SQLAlchemy Query Methods
+```python
+# Get all rows
+movies = session.query(Movie).all()
 
--- Get one movie by ID
-SELECT * FROM movies WHERE id = 1
+# Get one row by filter
+movie = session.query(Movie).filter(Movie.id == 1).first()
 
--- Insert a new review
-INSERT INTO reviews (movie_id, reviewer_name, rating, comment)
-VALUES (1, 'John', 5, 'Great movie!')
+# Count rows
+count = session.query(Movie).count()
 
--- Delete a review
-DELETE FROM reviews WHERE id = 1
+# Add new row
+session.add(new_movie)
+session.commit()
+
+# Delete row
+session.delete(movie)
+session.commit()
 ```
 
-### Database Connection Pattern
+### Session Pattern (Always use try/finally!)
 ```python
-# Step 1: Connect
-connection = get_connection()
-cursor = connection.cursor()
+session = get_session()
 
-# Step 2: Run query
-cursor.execute("SELECT * FROM movies")
+try:
+    # Your database code here
+    movies = session.query(Movie).all()
+    return [m.to_dict() for m in movies]
 
-# Step 3: Get results
-rows = cursor.fetchall()  # All rows
-row = cursor.fetchone()   # One row
-
-# Step 4: Close
-connection.close()
+finally:
+    session.close()  # Always close the session!
 ```
 
 ### Dictionaries (like JavaScript objects)

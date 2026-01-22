@@ -13,7 +13,7 @@
     <!-- Top 5 Rated Movies Section -->
     {% if top_movies and not search_query %}
     <section class="top-rated-section">
-        <h2 class="section-title">🏆 Top 5 Highest Rated</h2>
+        <h2 class="section-title">Top 5 Highest Rated</h2>
         <div class="top-rated-list">
             {% for movie in top_movies %}
             <a href="/movie/{{ movie.id }}" class="top-rated-item">
@@ -66,7 +66,6 @@
             {% endfor %}
         {% else %}
             <div class="no-results">
-                <span class="icon">🎬</span>
                 <h3>No movies found</h3>
                 <p>Try a different search term</p>
             </div>

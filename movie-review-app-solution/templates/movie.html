@@ -77,6 +77,9 @@
                         </span>
                     </div>
                     <p class="review-comment">{{ review.comment }}</p>
+                    {% if review.created_at %}
+                    <p class="review-date">Reviewed on {{ review.created_at }}</p>
+                    {% endif %}
                 </article>
                 {% endfor %}
             {% else %}

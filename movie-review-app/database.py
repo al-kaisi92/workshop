@@ -4,7 +4,7 @@ DATABASE FUNCTIONS FOR THE MOVIE REVIEW APP
 ================================================================================
 
 This file contains ALL the functions that work with our movie database.
-We use SQLite - a simple database that stores data in a single file.
+We use SQLAlchemy - a popular Python library for working with databases.
 
 WHAT IS A DATABASE?
 -------------------
@@ -13,6 +13,20 @@ Instead of storing data in text files, databases let you:
 - Store large amounts of data efficiently
 - Search and filter data quickly
 - Keep data organized in tables (like spreadsheets)
+
+WHAT IS SQLAlchemy?
+-------------------
+SQLAlchemy is a Python library that makes working with databases easier.
+It provides two ways to work with databases:
+
+1. ORM (Object-Relational Mapping) - Treat database rows as Python objects
+2. Core - Write SQL-like queries in Python
+
+We use SQLAlchemy because:
+- It's used by many real-world Python applications
+- It works with many different databases (SQLite, PostgreSQL, MySQL)
+- It makes database code easier to read and write
+- It's safer (helps prevent SQL injection attacks)
 
 WHAT IS SQLite?
 ---------------
@@ -24,8 +38,9 @@ SQLite is a lightweight database that:
 
 HOW THIS FILE IS ORGANIZED:
 ---------------------------
-1. Setup functions - Create the database and tables
-2. Challenge functions - The coding challenges YOU will complete!
+1. Models - Define the structure of our database tables
+2. Setup functions - Create the database and tables
+3. Challenge functions - The coding challenges YOU will complete!
 
 IMPORTANT: Complete the TODO challenges to make the app work!
 ================================================================================
@@ -35,142 +50,200 @@ IMPORTANT: Complete the TODO challenges to make the app work!
 # IMPORTS - These are like toolboxes we need to use
 # ============================================================================
 
-# sqlite3 is Python's built-in library for working with SQLite databases
-# We use it to run SQL commands and manage our database
-import sqlite3
-
+# SQLAlchemy imports for database operations
+# create_engine: Creates a connection to the database
+# Column, Integer, String, Text, ForeignKey: Define table columns
+# declarative_base: Base class for our models
+# sessionmaker: Creates database sessions for queries
+from sqlalchemy import create_engine, Column, Integer, String, Text, ForeignKey, DateTime
+from sqlalchemy.orm import declarative_base, sessionmaker, relationship
+from datetime import datetime
 
 # ============================================================================
 # DATABASE CONFIGURATION
 # ============================================================================
 
-# This is the name of our database file
-# When you run the app, you'll see a file called "movies.db" appear
-# All our data (movies and reviews) will be stored inside this file
-DATABASE_NAME = "movies.db"
+# This is the connection string for our SQLite database
+# "sqlite:///movies.db" means:
+# - sqlite: the type of database
+# - ///: three slashes for a relative path
+# - movies.db: the database file name
+DATABASE_URL = "sqlite:///movies.db"
+
+# Create the database engine
+# The engine is like a factory that creates database connections
+# echo=False means don't print SQL queries to the console (set to True for debugging)
+engine = create_engine(DATABASE_URL, echo=False)
+
+# Create a base class for our models
+# All our table classes will inherit from this Base
+Base = declarative_base()
+
+# Create a session factory
+# Sessions are used to interact with the database
+# autocommit=False means we control when changes are saved
+# autoflush=False means we control when data is sent to the database
+SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 
 # ============================================================================
-# HELPER FUNCTION - GET DATABASE CONNECTION
+# DATABASE MODELS - Define the structure of our tables
 # ============================================================================
 
-def get_connection():
+class Movie(Base):
     """
-    Create a connection to our SQLite database.
+    The Movie model represents the 'movies' table in our database.
 
-    WHAT IS A CONNECTION?
-    ---------------------
-    Think of it like opening a door to the database.
-    We need to "connect" before we can read or write any data.
-
-    WHAT IS row_factory?
-    --------------------
-    By default, SQLite returns data as tuples like: (1, "The Dark Knight", 2008)
-    But that's hard to work with! We don't know which value is which.
-
-    Setting row_factory = sqlite3.Row makes it return data like a dictionary:
-    {"id": 1, "title": "The Dark Knight", "year": 2008}
-
-    This is MUCH easier to use because we can access values by name!
-
-    Returns:
-        sqlite3.Connection: An open connection to the database
-    """
-    # sqlite3.connect() opens the database file (creates it if it doesn't exist)
-    connection = sqlite3.connect(DATABASE_NAME)
-
-    # This makes our results easier to work with (like dictionaries)
-    connection.row_factory = sqlite3.Row
-
-    # Return the connection so other functions can use it
-    return connection
-
-
-# ============================================================================
-# DATABASE SETUP - CREATE TABLES
-# ============================================================================
-
-def create_tables():
-    """
-    Create the database tables if they don't exist.
-
-    WHAT IS A TABLE?
+    WHAT IS A MODEL?
     ----------------
-    A table is like a spreadsheet in your database.
-    Each table stores one type of thing (movies or reviews).
+    A model is a Python class that represents a database table.
+    Each attribute of the class becomes a column in the table.
+    Each instance of the class represents a row in the table.
 
-    WHAT IS A SCHEMA?
-    -----------------
-    A schema defines the structure of your table:
-    - What columns (fields) it has
-    - What type of data each column holds (text, number, etc.)
-
-    OUR TABLES:
-    -----------
-    1. movies - Stores information about each movie
-       Columns: id, title, year, genre, poster, plot
-
-    2. reviews - Stores user reviews for movies
-       Columns: id, movie_id, reviewer_name, rating, comment
-
-    WHAT IS A PRIMARY KEY?
+    WHAT IS __tablename__?
     ----------------------
-    A primary key is a unique identifier for each row.
-    No two rows can have the same primary key.
-    We use 'id' as our primary key - each movie/review gets a unique number.
+    This tells SQLAlchemy what to name the table in the database.
+
+    COLUMN TYPES:
+    -------------
+    - Integer: Whole numbers (1, 2, 3, etc.)
+    - String(length): Text with a maximum length
+    - Text: Text with no length limit (for long content like plot descriptions)
+
+    WHAT IS primary_key?
+    --------------------
+    The primary key uniquely identifies each row in the table.
+    No two movies can have the same id.
+
+    WHAT IS nullable?
+    -----------------
+    nullable=False means this column MUST have a value.
+    You cannot add a movie without a title, for example.
+    """
+    __tablename__ = "movies"
+
+    # Primary key - unique identifier for each movie
+    id = Column(Integer, primary_key=True, index=True)
+
+    # Movie information columns
+    title = Column(String(200), nullable=False)    # Movie title (max 200 characters)
+    year = Column(Integer, nullable=False)          # Release year
+    genre = Column(String(50), nullable=False)      # Genre (Action, Drama, etc.)
+    poster = Column(String(500), nullable=False)    # URL to poster image
+    plot = Column(Text, nullable=False)             # Plot description
+
+    # Relationship to reviews
+    # This creates a connection between Movie and Review
+    # back_populates links this to the 'movie' attribute in Review
+    reviews = relationship("Review", back_populates="movie")
+
+    def to_dict(self):
+        """
+        Convert the Movie object to a dictionary.
+
+        WHY DO WE NEED THIS?
+        --------------------
+        Our templates expect dictionaries, not SQLAlchemy objects.
+        This method converts the object to a dictionary format.
+
+        Returns:
+            dict: Movie data as a dictionary
+        """
+        return {
+            "id": self.id,
+            "title": self.title,
+            "year": self.year,
+            "genre": self.genre,
+            "poster": self.poster,
+            "plot": self.plot,
+            "reviews": [review.to_dict() for review in self.reviews]
+        }
+
+
+class Review(Base):
+    """
+    The Review model represents the 'reviews' table in our database.
 
     WHAT IS A FOREIGN KEY?
     ----------------------
     A foreign key links one table to another.
-    In the reviews table, movie_id is a foreign key that points to a movie.
+    movie_id is a foreign key that points to a movie's id.
     This tells us which movie the review is about.
 
-    WHAT IS AUTOINCREMENT?
-    ----------------------
-    AUTOINCREMENT means the database automatically assigns the next number.
-    So we don't have to manually track what ID to use next!
+    WHAT IS A RELATIONSHIP?
+    -----------------------
+    A relationship creates a connection between two models.
+    This lets us easily access related data:
+    - review.movie gives us the Movie object
+    - movie.reviews gives us all Review objects for that movie
     """
-    # Step 1: Open a connection to the database
-    connection = get_connection()
+    __tablename__ = "reviews"
 
-    # Step 2: Get a "cursor" - this is what we use to run SQL commands
-    # Think of it like a pen that writes commands to the database
-    cursor = connection.cursor()
+    # Primary key
+    id = Column(Integer, primary_key=True, index=True)
 
-    # Step 3: Create the movies table
-    # The triple quotes (""") let us write multi-line strings
-    # IF NOT EXISTS means: only create if the table doesn't already exist
-    cursor.execute("""
-        CREATE TABLE IF NOT EXISTS movies (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            title TEXT NOT NULL,
-            year INTEGER NOT NULL,
-            genre TEXT NOT NULL,
-            poster TEXT NOT NULL,
-            plot TEXT NOT NULL
-        )
-    """)
+    # Foreign key - links to the movies table
+    movie_id = Column(Integer, ForeignKey("movies.id"), nullable=False)
 
-    # Step 4: Create the reviews table
-    # movie_id links each review to a movie (foreign key relationship)
-    cursor.execute("""
-        CREATE TABLE IF NOT EXISTS reviews (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            movie_id INTEGER NOT NULL,
-            reviewer_name TEXT NOT NULL,
-            rating INTEGER NOT NULL,
-            comment TEXT NOT NULL,
-            FOREIGN KEY (movie_id) REFERENCES movies (id)
-        )
-    """)
+    # Review information columns
+    reviewer_name = Column(String(100), nullable=False)  # Name of the reviewer
+    rating = Column(Integer, nullable=False)              # Star rating (1-5)
+    comment = Column(Text, nullable=False)                # The review text
+    created_at = Column(DateTime, default=datetime.now)   # When the review was created
 
-    # Step 5: Save the changes to the database
-    # This is called "committing" - without this, changes are lost!
-    connection.commit()
+    # Relationship to movie
+    movie = relationship("Movie", back_populates="reviews")
 
-    # Step 6: Close the connection (like closing the door)
-    # Always close connections when you're done!
-    connection.close()
+    def to_dict(self):
+        """Convert the Review object to a dictionary."""
+        return {
+            "id": self.id,
+            "movie_id": self.movie_id,
+            "reviewer_name": self.reviewer_name,
+            "name": self.reviewer_name,  # Alias for compatibility
+            "rating": self.rating,
+            "comment": self.comment,
+            "created_at": self.created_at.strftime("%d %b %Y at %H:%M") if self.created_at else None
+        }
+
+
+# ============================================================================
+# DATABASE SETUP - Create tables and seed data
+# ============================================================================
+
+def create_tables():
+    """
+    Create all database tables based on our models.
+
+    HOW IT WORKS:
+    -------------
+    Base.metadata.create_all() looks at all classes that inherit from Base
+    and creates the corresponding tables in the database if they don't exist.
+
+    This is called when the app starts to make sure our tables exist.
+    """
+    Base.metadata.create_all(bind=engine)
+
+
+def get_session():
+    """
+    Create a new database session.
+
+    WHAT IS A SESSION?
+    ------------------
+    A session is like a conversation with the database.
+    You use it to:
+    - Query data (SELECT)
+    - Add new data (INSERT)
+    - Update existing data (UPDATE)
+    - Delete data (DELETE)
+
+    Always close the session when you're done!
+
+    Returns:
+        Session: A new database session
+    """
+    return SessionLocal()
 
 
 def seed_movies():
@@ -182,136 +255,114 @@ def seed_movies():
     "Seeding" means adding initial/starter data to your database.
     This gives us some movies to display when the app first runs.
 
-    WHY CHECK IF MOVIES EXIST FIRST?
-    ---------------------------------
-    We don't want to add duplicate movies every time the app starts!
-    So we first check if movies already exist in the database.
-    If they do, we skip adding them again.
-
-    SQL INSERT STATEMENT:
-    ---------------------
-    INSERT INTO tablename (column1, column2, ...) VALUES (value1, value2, ...)
-
-    This adds a new row to the table with the specified values.
+    We check if movies already exist to avoid adding duplicates.
     """
-    # Step 1: Open connection and get cursor
-    connection = get_connection()
-    cursor = connection.cursor()
+    session = get_session()
 
-    # Step 2: Check if we already have movies in the database
-    # SELECT COUNT(*) counts how many rows are in the table
-    cursor.execute("SELECT COUNT(*) as count FROM movies")
-    result = cursor.fetchone()  # Get the result
+    try:
+        # Check if we already have movies
+        existing_count = session.query(Movie).count()
+        if existing_count > 0:
+            return  # Database already seeded
 
-    # If we already have movies, don't add duplicates - just return
-    if result["count"] > 0:
-        connection.close()
-        return
+        # List of movies to add
+        movies_data = [
+            {
+                "title": "The Dark Knight",
+                "year": 2008,
+                "genre": "Action",
+                "poster": "https://m.media-amazon.com/images/M/MV5BMTMxNTMwODM0NF5BMl5BanBnXkFtZTcwODAyMTk2Mw@@._V1_SX300.jpg",
+                "plot": "When the menace known as the Joker wreaks havoc and chaos on the people of Gotham, Batman must accept one of the greatest psychological and physical tests of his ability to fight injustice."
+            },
+            {
+                "title": "Inception",
+                "year": 2010,
+                "genre": "Sci-Fi",
+                "poster": "https://m.media-amazon.com/images/M/MV5BMjAxMzY3NjcxNF5BMl5BanBnXkFtZTcwNTI5OTM0Mw@@._V1_SX300.jpg",
+                "plot": "A thief who steals corporate secrets through the use of dream-sharing technology is given the inverse task of planting an idea into the mind of a C.E.O."
+            },
+            {
+                "title": "Spider-Man: Into the Spider-Verse",
+                "year": 2018,
+                "genre": "Animation",
+                "poster": "https://m.media-amazon.com/images/M/MV5BMjMwNDkxMTgzOF5BMl5BanBnXkFtZTgwNTkwNTQ3NjM@._V1_SX300.jpg",
+                "plot": "Teen Miles Morales becomes the Spider-Man of his universe, and must join with five spider-powered individuals from other dimensions to stop a threat for all realities."
+            },
+            {
+                "title": "The Shawshank Redemption",
+                "year": 1994,
+                "genre": "Drama",
+                "poster": "https://m.media-amazon.com/images/M/MV5BNDE3ODcxYzMtY2YzZC00NmNlLWJiNDMtZDViZWM2MzIxZDYwXkEyXkFqcGdeQXVyNjAwNDUxODI@._V1_SX300.jpg",
+                "plot": "Two imprisoned men bond over a number of years, finding solace and eventual redemption through acts of common decency."
+            },
+            {
+                "title": "Interstellar",
+                "year": 2014,
+                "genre": "Sci-Fi",
+                "poster": "https://m.media-amazon.com/images/M/MV5BZjdkOTU3MDktN2IxOS00OGEyLWFmMjktY2FiMmZkNWIyODZiXkEyXkFqcGdeQXVyMTMxODk2OTU@._V1_SX300.jpg",
+                "plot": "A team of explorers travel through a wormhole in space in an attempt to ensure humanity's survival."
+            },
+            {
+                "title": "The Lion King",
+                "year": 1994,
+                "genre": "Animation",
+                "poster": "https://m.media-amazon.com/images/M/MV5BYTYxNGMyZTYtMjE3MS00MzNjLWFjNmYtMDk3N2FmM2JiM2M1XkEyXkFqcGdeQXVyNjY5NDU4NzI@._V1_SX300.jpg",
+                "plot": "Lion prince Simba and his father are targeted by his bitter uncle, who wants to ascend the throne himself."
+            },
+            {
+                "title": "Avengers: Endgame",
+                "year": 2019,
+                "genre": "Action",
+                "poster": "https://m.media-amazon.com/images/M/MV5BMTc5MDE2ODcwNV5BMl5BanBnXkFtZTgwMzI2NzQ2NzM@._V1_SX300.jpg",
+                "plot": "After the devastating events of Infinity War, the Avengers assemble once more to reverse Thanos' actions and restore balance to the universe."
+            },
+            {
+                "title": "Parasite",
+                "year": 2019,
+                "genre": "Drama",
+                "poster": "https://m.media-amazon.com/images/M/MV5BYWZjMjk3ZTItODQ2ZC00NTY5LWE0ZDYtZTI3MjcwN2Q5NTVkXkEyXkFqcGdeQXVyODk4OTc3MTY@._V1_SX300.jpg",
+                "plot": "Greed and class discrimination threaten the newly formed symbiotic relationship between the wealthy Park family and the destitute Kim clan."
+            },
+            {
+                "title": "The Matrix",
+                "year": 1999,
+                "genre": "Sci-Fi",
+                "poster": "https://m.media-amazon.com/images/M/MV5BNzQzOTk3OTAtNDQ0Zi00ZTVkLWI0MTEtMDllZjNkYzNjNTc4L2ltYWdlXkEyXkFqcGdeQXVyNjU0OTQ0OTY@._V1_SX300.jpg",
+                "plot": "A computer hacker learns about the true nature of reality and his role in the war against its controllers."
+            },
+            {
+                "title": "Forrest Gump",
+                "year": 1994,
+                "genre": "Drama",
+                "poster": "https://m.media-amazon.com/images/M/MV5BNWIwODRlZTUtY2U3ZS00Yzg1LWJhNzYtMmZiYmEyNmU1NjMzXkEyXkFqcGdeQXVyMTQxNzMzNDI@._V1_SX300.jpg",
+                "plot": "The history of the United States from the 1950s to the '70s unfolds from the perspective of an Alabama man with an IQ of 75."
+            },
+            {
+                "title": "Toy Story",
+                "year": 1995,
+                "genre": "Animation",
+                "poster": "https://m.media-amazon.com/images/M/MV5BMDU2ZWJlMjktMTRhMy00ZTA5LWEzNDgtYmNmZTEwZTViZWJkXkEyXkFqcGdeQXVyNDQ2OTk4MzI@._V1_SX300.jpg",
+                "plot": "A cowboy doll is profoundly threatened and jealous when a new spaceman action figure supplants him as top toy in a boy's bedroom."
+            },
+            {
+                "title": "Pulp Fiction",
+                "year": 1994,
+                "genre": "Crime",
+                "poster": "https://m.media-amazon.com/images/M/MV5BNGNhMDIzZTUtNTBlZi00MTRlLWFjM2ItYzViMjE3YzI5MjljXkEyXkFqcGdeQXVyNzkwMjQ5NzM@._V1_SX300.jpg",
+                "plot": "The lives of two mob hitmen, a boxer, a gangster and his wife intertwine in four tales of violence and redemption."
+            }
+        ]
 
-    # Step 3: Define our list of movies to add
-    # Each movie is a dictionary with all its information
-    movies = [
-        {
-            "title": "The Dark Knight",
-            "year": 2008,
-            "genre": "Action",
-            "poster": "https://m.media-amazon.com/images/M/MV5BMTMxNTMwODM0NF5BMl5BanBnXkFtZTcwODAyMTk2Mw@@._V1_SX300.jpg",
-            "plot": "When the menace known as the Joker wreaks havoc and chaos on the people of Gotham, Batman must accept one of the greatest psychological and physical tests of his ability to fight injustice."
-        },
-        {
-            "title": "Inception",
-            "year": 2010,
-            "genre": "Sci-Fi",
-            "poster": "https://m.media-amazon.com/images/M/MV5BMjAxMzY3NjcxNF5BMl5BanBnXkFtZTcwNTI5OTM0Mw@@._V1_SX300.jpg",
-            "plot": "A thief who steals corporate secrets through the use of dream-sharing technology is given the inverse task of planting an idea into the mind of a C.E.O."
-        },
-        {
-            "title": "Spider-Man: Into the Spider-Verse",
-            "year": 2018,
-            "genre": "Animation",
-            "poster": "https://m.media-amazon.com/images/M/MV5BMjMwNDkxMTgzOF5BMl5BanBnXkFtZTgwNTkwNTQ3NjM@._V1_SX300.jpg",
-            "plot": "Teen Miles Morales becomes the Spider-Man of his universe, and must join with five spider-powered individuals from other dimensions to stop a threat for all realities."
-        },
-        {
-            "title": "The Shawshank Redemption",
-            "year": 1994,
-            "genre": "Drama",
-            "poster": "https://m.media-amazon.com/images/M/MV5BNDE3ODcxYzMtY2YzZC00NmNlLWJiNDMtZDViZWM2MzIxZDYwXkEyXkFqcGdeQXVyNjAwNDUxODI@._V1_SX300.jpg",
-            "plot": "Two imprisoned men bond over a number of years, finding solace and eventual redemption through acts of common decency."
-        },
-        {
-            "title": "Interstellar",
-            "year": 2014,
-            "genre": "Sci-Fi",
-            "poster": "https://m.media-amazon.com/images/M/MV5BZjdkOTU3MDktN2IxOS00OGEyLWFmMjktY2FiMmZkNWIyODZiXkEyXkFqcGdeQXVyMTMxODk2OTU@._V1_SX300.jpg",
-            "plot": "A team of explorers travel through a wormhole in space in an attempt to ensure humanity's survival."
-        },
-        {
-            "title": "The Lion King",
-            "year": 1994,
-            "genre": "Animation",
-            "poster": "https://m.media-amazon.com/images/M/MV5BYTYxNGMyZTYtMjE3MS00MzNjLWFjNmYtMDk3N2FmM2JiM2M1XkEyXkFqcGdeQXVyNjY5NDU4NzI@._V1_SX300.jpg",
-            "plot": "Lion prince Simba and his father are targeted by his bitter uncle, who wants to ascend the throne himself."
-        },
-        {
-            "title": "Avengers: Endgame",
-            "year": 2019,
-            "genre": "Action",
-            "poster": "https://m.media-amazon.com/images/M/MV5BMTc5MDE2ODcwNV5BMl5BanBnXkFtZTgwMzI2NzQ2NzM@._V1_SX300.jpg",
-            "plot": "After the devastating events of Infinity War, the Avengers assemble once more to reverse Thanos' actions and restore balance to the universe."
-        },
-        {
-            "title": "Parasite",
-            "year": 2019,
-            "genre": "Drama",
-            "poster": "https://m.media-amazon.com/images/M/MV5BYWZjMjk3ZTItODQ2ZC00NTY5LWE0ZDYtZTI3MjcwN2Q5NTVkXkEyXkFqcGdeQXVyODk4OTc3MTY@._V1_SX300.jpg",
-            "plot": "Greed and class discrimination threaten the newly formed symbiotic relationship between the wealthy Park family and the destitute Kim clan."
-        },
-        {
-            "title": "The Matrix",
-            "year": 1999,
-            "genre": "Sci-Fi",
-            "poster": "https://m.media-amazon.com/images/M/MV5BNzQzOTk3OTAtNDQ0Zi00ZTVkLWI0MTEtMDllZjNkYzNjNTc4L2ltYWdlXkEyXkFqcGdeQXVyNjU0OTQ0OTY@._V1_SX300.jpg",
-            "plot": "A computer hacker learns about the true nature of reality and his role in the war against its controllers."
-        },
-        {
-            "title": "Forrest Gump",
-            "year": 1994,
-            "genre": "Drama",
-            "poster": "https://m.media-amazon.com/images/M/MV5BNWIwODRlZTUtY2U3ZS00Yzg1LWJhNzYtMmZiYmEyNmU1NjMzXkEyXkFqcGdeQXVyMTQxNzMzNDI@._V1_SX300.jpg",
-            "plot": "The history of the United States from the 1950s to the '70s unfolds from the perspective of an Alabama man with an IQ of 75."
-        },
-        {
-            "title": "Toy Story",
-            "year": 1995,
-            "genre": "Animation",
-            "poster": "https://m.media-amazon.com/images/M/MV5BMDU2ZWJlMjktMTRhMy00ZTA5LWEzNDgtYmNmZTEwZTViZWJkXkEyXkFqcGdeQXVyNDQ2OTk4MzI@._V1_SX300.jpg",
-            "plot": "A cowboy doll is profoundly threatened and jealous when a new spaceman action figure supplants him as top toy in a boy's bedroom."
-        },
-        {
-            "title": "Pulp Fiction",
-            "year": 1994,
-            "genre": "Crime",
-            "poster": "https://m.media-amazon.com/images/M/MV5BNGNhMDIzZTUtNTBlZi00MTRlLWFjM2ItYzViMjE3YzI5MjljXkEyXkFqcGdeQXVyNzkwMjQ5NzM@._V1_SX300.jpg",
-            "plot": "The lives of two mob hitmen, a boxer, a gangster and his wife intertwine in four tales of violence and redemption."
-        }
-    ]
+        # Add each movie to the database
+        for movie_data in movies_data:
+            movie = Movie(**movie_data)
+            session.add(movie)
 
-    # Step 4: Insert each movie into the database
-    # We use a for loop to go through each movie in our list
-    for movie in movies:
-        # The ? symbols are placeholders for our values
-        # This is called a "parameterized query" - it's safe from SQL injection attacks!
-        cursor.execute("""
-            INSERT INTO movies (title, year, genre, poster, plot)
-            VALUES (?, ?, ?, ?, ?)
-        """, (movie["title"], movie["year"], movie["genre"], movie["poster"], movie["plot"]))
+        # Save all changes
+        session.commit()
 
-    # Step 5: Save all the changes
-    connection.commit()
-
-    # Step 6: Close the connection
-    connection.close()
+    finally:
+        session.close()
 
 
 # ============================================================================
@@ -325,101 +376,38 @@ def load_movies():
 
     CHALLENGE 1 - DONE FOR YOU!
     ---------------------------
-    This shows you how to read data from a database using SELECT.
-
-    SQL SELECT STATEMENT:
-    ---------------------
-    SELECT * FROM tablename
-
-    The * means "all columns" - we want everything!
+    This shows you how to query data using SQLAlchemy.
 
     HOW IT WORKS:
     -------------
-    1. Connect to the database
-    2. Run a SELECT query to get all movies
-    3. Use fetchall() to get ALL the results as a list
-    4. Convert each row to a dictionary (easier to use)
-    5. Attach any reviews to each movie
-    6. Return the list of movies
+    1. Create a session (connection to database)
+    2. Use session.query(Model).all() to get all rows
+    3. Convert each Movie object to a dictionary
+    4. Close the session
+    5. Return the list of movies
+
+    SQLALCHEMY QUERY METHODS:
+    -------------------------
+    - query(Model).all() - Get all rows
+    - query(Model).first() - Get first row
+    - query(Model).filter(...) - Filter rows
+    - query(Model).count() - Count rows
 
     Returns:
-        list: A list of all movie dictionaries with their reviews
+        list: A list of all movie dictionaries
     """
-    # Step 1: Connect to the database
-    connection = get_connection()
-    cursor = connection.cursor()
+    session = get_session()
 
-    # Step 2: Run SELECT query to get ALL movies
-    # SELECT * means "select all columns"
-    # FROM movies means "from the movies table"
-    cursor.execute("SELECT * FROM movies")
+    try:
+        # Query all movies from the database
+        movies = session.query(Movie).all()
 
-    # Step 3: Fetch all results
-    # fetchall() returns a list of all matching rows
-    rows = cursor.fetchall()
+        # Convert each Movie object to a dictionary
+        return [movie.to_dict() for movie in movies]
 
-    # Step 4: Convert each row to a dictionary
-    # We also attach any reviews for this movie
-    movies = []
-    for row in rows:
-        # Convert the row to a dictionary
-        movie = dict(row)
-
-        # Get reviews for this movie (using the helper function)
-        movie["reviews"] = get_reviews_for_movie(movie["id"])
-
-        # Add the movie to our list
-        movies.append(movie)
-
-    # Step 5: Close the connection
-    connection.close()
-
-    # Step 6: Return the list of movies
-    return movies
-
-
-# ============================================================================
-# HELPER FUNCTION - Get reviews for a specific movie
-# ============================================================================
-
-def get_reviews_for_movie(movie_id):
-    """
-    Get all reviews for a specific movie.
-
-    This is a helper function used by other functions.
-    It's not a challenge - it's already done for you!
-
-    HOW IT WORKS:
-    -------------
-    1. Connect to the database
-    2. Run SELECT query with WHERE clause to filter by movie_id
-    3. Return all matching reviews
-
-    SQL WHERE CLAUSE:
-    -----------------
-    WHERE column = value
-
-    This filters the results to only include rows where the condition is true.
-
-    Args:
-        movie_id (int): The ID of the movie to get reviews for
-
-    Returns:
-        list: A list of review dictionaries for this movie
-    """
-    connection = get_connection()
-    cursor = connection.cursor()
-
-    # SELECT reviews WHERE movie_id matches
-    # The ? is a placeholder for the movie_id value
-    cursor.execute("SELECT * FROM reviews WHERE movie_id = ?", (movie_id,))
-
-    # Convert rows to list of dictionaries
-    rows = cursor.fetchall()
-    reviews = [dict(row) for row in rows]
-
-    connection.close()
-    return reviews
+    finally:
+        # Always close the session when done
+        session.close()
 
 
 # ============================================================================
@@ -441,27 +429,24 @@ def get_movie_by_id(movie_id):
     --------------------
     Find and return ONE specific movie from the database.
 
-    SQL YOU'LL USE:
-    ---------------
-    SELECT * FROM movies WHERE id = ?
+    SQLALCHEMY METHODS YOU'LL USE:
+    ------------------------------
+    - session.query(Movie).filter(Movie.id == movie_id).first()
 
-    This selects ALL columns from movies WHERE the id equals our value.
-    The ? is a placeholder - you put the actual value in a tuple.
+    This queries the Movie table, filters where id matches, and gets the first result.
+    .first() returns None if no movie is found.
 
     STEP-BY-STEP HINTS:
     -------------------
-    1. Create a connection: connection = get_connection()
-    2. Get a cursor: cursor = connection.cursor()
-    3. Run the SELECT query with WHERE clause:
-       cursor.execute("SELECT * FROM movies WHERE id = ?", (movie_id,))
-       NOTE: The comma after movie_id is important! It makes it a tuple.
-    4. Get ONE result: row = cursor.fetchone()
-       (fetchone returns ONE row, fetchall returns ALL rows)
-    5. Check if movie was found: if row is None: return None
-    6. Convert to dictionary: movie = dict(row)
-    7. Add reviews: movie["reviews"] = get_reviews_for_movie(movie_id)
-    8. Close connection: connection.close()
-    9. Return the movie!
+    1. Create a session: session = get_session()
+    2. Query the movie:
+       movie = session.query(Movie).filter(Movie.id == movie_id).first()
+    3. Check if movie exists: if movie is None: return None
+    4. Convert to dictionary: result = movie.to_dict()
+    5. Close session: session.close()
+    6. Return the result
+
+    IMPORTANT: Use try/finally to ensure session is closed!
 
     Args:
         movie_id (int): The ID of the movie to find
@@ -479,11 +464,12 @@ def get_movie_by_id(movie_id):
     """
     # TODO: Write your code here!
     # Remember to:
-    # 1. Connect to database
-    # 2. SELECT the movie WHERE id = movie_id
-    # 3. Check if found (fetchone might return None)
-    # 4. Convert to dict and add reviews
-    # 5. Close connection and return
+    # 1. Create a session
+    # 2. Query the movie by id using .filter()
+    # 3. Use .first() to get one result
+    # 4. Check if movie exists
+    # 5. Convert to dict and return
+    # 6. Use try/finally to close the session
     pass
 
 
@@ -504,15 +490,7 @@ def add_review(movie_id, review):
 
     WHAT YOU NEED TO DO:
     --------------------
-    Insert a new review into the reviews table.
-
-    SQL YOU'LL USE:
-    ---------------
-    INSERT INTO reviews (movie_id, reviewer_name, rating, comment)
-    VALUES (?, ?, ?, ?)
-
-    INSERT INTO adds a new row to the table.
-    The VALUES are the data for each column.
+    Create a new Review object and add it to the database.
 
     THE REVIEW PARAMETER:
     ---------------------
@@ -523,20 +501,24 @@ def add_review(movie_id, review):
         "comment": "Great movie!"
     }
 
-    You need to extract these values and insert them!
+    SQLALCHEMY METHODS YOU'LL USE:
+    ------------------------------
+    - session.add(object) - Add a new object to the session
+    - session.commit() - Save all changes to the database
 
     STEP-BY-STEP HINTS:
     -------------------
-    1. Create a connection: connection = get_connection()
-    2. Get a cursor: cursor = connection.cursor()
-    3. Run the INSERT query:
-       cursor.execute('''
-           INSERT INTO reviews (movie_id, reviewer_name, rating, comment)
-           VALUES (?, ?, ?, ?)
-       ''', (movie_id, review["name"], review["rating"], review["comment"]))
-    4. IMPORTANT! Commit the changes: connection.commit()
-       Without this, the review won't be saved!
-    5. Close connection: connection.close()
+    1. Create a session: session = get_session()
+    2. Create a Review object:
+       new_review = Review(
+           movie_id=movie_id,
+           reviewer_name=review["name"],
+           rating=review["rating"],
+           comment=review["comment"]
+       )
+    3. Add to session: session.add(new_review)
+    4. Commit changes: session.commit()
+    5. Close session
 
     Args:
         movie_id (int): The ID of the movie being reviewed
@@ -553,10 +535,11 @@ def add_review(movie_id, review):
     """
     # TODO: Write your code here!
     # Remember to:
-    # 1. Connect to database
-    # 2. INSERT the review into the reviews table
-    # 3. COMMIT the changes (very important!)
-    # 4. Close connection
+    # 1. Create a session
+    # 2. Create a Review object with the review data
+    # 3. Add the review to the session
+    # 4. Commit the changes
+    # 5. Close the session
     pass
 
 
@@ -583,26 +566,29 @@ def get_average_rating(movie_id):
     --------------------
 
     METHOD 1 - Using Python (Recommended for beginners):
-    1. Get all reviews for the movie
-    2. If no reviews, return 0
-    3. Add up all the ratings
-    4. Divide by the number of reviews
-    5. Round to 1 decimal place
+    1. Get the movie using get_movie_by_id()
+    2. Get its reviews
+    3. If no reviews, return 0
+    4. Add up all the ratings
+    5. Divide by the number of reviews
+    6. Round to 1 decimal place
 
-    METHOD 2 - Using SQL AVG function (Advanced):
-    SELECT AVG(rating) FROM reviews WHERE movie_id = ?
-    This calculates the average directly in the database!
+    METHOD 2 - Using SQLAlchemy (Advanced):
+    from sqlalchemy import func
+    avg = session.query(func.avg(Review.rating)).filter(Review.movie_id == movie_id).scalar()
 
-    STEP-BY-STEP HINTS (Method 1 - Python):
-    ---------------------------------------
-    1. Get reviews: reviews = get_reviews_for_movie(movie_id)
-    2. Check if empty: if len(reviews) == 0: return 0
-    3. Add up ratings with a loop:
+    STEP-BY-STEP HINTS (Method 1):
+    ------------------------------
+    1. Get movie: movie = get_movie_by_id(movie_id)
+    2. Check if movie exists: if movie is None: return 0
+    3. Get reviews: reviews = movie.get("reviews", [])
+    4. Check if empty: if len(reviews) == 0: return 0
+    5. Calculate total:
        total = 0
        for review in reviews:
            total = total + review["rating"]
-    4. Calculate average: average = total / len(reviews)
-    5. Round it: return round(average, 1)
+    6. Calculate average: average = total / len(reviews)
+    7. Return rounded: return round(average, 1)
 
     Args:
         movie_id (int): The ID of the movie
@@ -622,10 +608,11 @@ def get_average_rating(movie_id):
     """
     # TODO: Write your code here!
     # Remember:
-    # 1. Get reviews for this movie
-    # 2. Handle the case where there are no reviews (return 0)
-    # 3. Calculate the average
-    # 4. Round to 1 decimal place using round(value, 1)
+    # 1. Get the movie by id
+    # 2. Handle the case where movie doesn't exist
+    # 3. Handle the case where there are no reviews
+    # 4. Calculate the average
+    # 5. Round to 1 decimal place using round(value, 1)
     return 0
 
 
@@ -655,14 +642,14 @@ def search_movies(query):
     METHOD 1 - Using Python (Recommended for beginners):
     1. If query is empty, return all movies
     2. Load all movies
-    3. Filter movies where query is in the title
+    3. Filter movies where query is in the title (case-insensitive)
 
-    METHOD 2 - Using SQL LIKE (Advanced):
-    SELECT * FROM movies WHERE LOWER(title) LIKE LOWER('%query%')
-    The % symbols mean "anything before/after"
+    METHOD 2 - Using SQLAlchemy (Advanced):
+    movies = session.query(Movie).filter(Movie.title.ilike(f"%{query}%")).all()
+    ilike() is case-insensitive LIKE
 
-    STEP-BY-STEP HINTS (Method 1 - Python):
-    ---------------------------------------
+    STEP-BY-STEP HINTS (Method 1):
+    ------------------------------
     1. Check if empty query: if query == "": return load_movies()
     2. Load all movies: movies = load_movies()
     3. Convert query to lowercase: query_lower = query.lower()
@@ -785,17 +772,16 @@ def get_movies_by_genre(genre):
     Filter movies to only show those matching the given genre.
     The search should be case-insensitive.
 
-    STEP-BY-STEP HINTS:
-    -------------------
-    1. Load all movies: movies = load_movies()
+    TWO WAYS TO DO THIS:
+    --------------------
+
+    METHOD 1 - Using Python:
+    1. Load all movies
     2. If genre is empty, return all movies
-    3. Convert genre to lowercase: genre_lower = genre.lower()
-    4. Filter movies where genre matches:
-       results = []
-       for movie in movies:
-           if movie["genre"].lower() == genre_lower:
-               results.append(movie)
-    5. Return results
+    3. Filter movies where genre matches
+
+    METHOD 2 - Using SQLAlchemy:
+    movies = session.query(Movie).filter(Movie.genre.ilike(genre)).all()
 
     Args:
         genre (str): The genre to filter by (e.g., "Action", "Drama")
@@ -807,9 +793,6 @@ def get_movies_by_genre(genre):
     --------
     get_movies_by_genre("Action")
     # Returns: [{"title": "The Dark Knight", ...}, {"title": "Avengers: Endgame", ...}]
-
-    get_movies_by_genre("animation")  # Case insensitive!
-    # Returns: [{"title": "Spider-Man: Into the Spider-Verse", ...}, ...]
     """
     # TODO: Write your code here!
     # This is a BONUS challenge - try it if you finish the others!
@@ -839,11 +822,11 @@ def count_reviews(movie_id):
     --------------------
 
     METHOD 1 - Using Python:
-    reviews = get_reviews_for_movie(movie_id)
-    return len(reviews)
+    movie = get_movie_by_id(movie_id)
+    return len(movie["reviews"]) if movie else 0
 
-    METHOD 2 - Using SQL COUNT:
-    SELECT COUNT(*) FROM reviews WHERE movie_id = ?
+    METHOD 2 - Using SQLAlchemy:
+    count = session.query(Review).filter(Review.movie_id == movie_id).count()
 
     Args:
         movie_id (int): The ID of the movie
@@ -855,9 +838,6 @@ def count_reviews(movie_id):
     --------
     count_reviews(1)
     # Returns: 3 (if movie 1 has 3 reviews)
-
-    count_reviews(999)
-    # Returns: 0 (movie has no reviews)
     """
     # TODO: Write your code here!
     # This is a BONUS challenge - try it if you finish the others!
@@ -887,11 +867,11 @@ def get_all_genres():
     1. Load all movies
     2. Create an empty list for genres
     3. Loop through movies and collect unique genres
-    4. Sort alphabetically (optional but nice)
+    4. Sort alphabetically
 
-    METHOD 2 - Using SQL DISTINCT:
-    SELECT DISTINCT genre FROM movies
-    DISTINCT means "only unique values"
+    METHOD 2 - Using SQLAlchemy:
+    from sqlalchemy import distinct
+    genres = session.query(distinct(Movie.genre)).all()
 
     Args:
         None
@@ -928,20 +908,19 @@ def delete_review(review_id):
     --------------------
     Remove a review from the database using its ID.
 
-    SQL YOU'LL USE:
-    ---------------
-    DELETE FROM reviews WHERE id = ?
-
-    DELETE removes rows from the table.
-    WHERE specifies which row(s) to delete.
+    SQLALCHEMY METHODS YOU'LL USE:
+    ------------------------------
+    - session.query(Review).filter(Review.id == review_id).first()
+    - session.delete(object)
+    - session.commit()
 
     STEP-BY-STEP HINTS:
     -------------------
-    1. Create connection
-    2. Get cursor
-    3. Run DELETE query: cursor.execute("DELETE FROM reviews WHERE id = ?", (review_id,))
-    4. Commit changes!
-    5. Close connection
+    1. Create a session
+    2. Find the review: review = session.query(Review).filter(Review.id == review_id).first()
+    3. Check if it exists: if review: session.delete(review)
+    4. Commit changes: session.commit()
+    5. Close session
 
     Args:
         review_id (int): The ID of the review to delete
