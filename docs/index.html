@@ -44,7 +44,7 @@
                 BTEC Workshop 2025
             </div>
             <h1>Build Your First<br><span class="gradient-text">Web Application</span></h1>
-            <p>A hands-on workshop where you'll create a movie review app using Python & FastAPI. No experience required.</p>
+            <p>A hands-on workshop where you'll create a movie review app using Python, FastAPI & SQLite. No experience required.</p>
             <div class="hero-buttons">
                 <a href="https://github.com/al-kaisi92/workshop" class="btn btn-primary">
                     Get Started
@@ -61,7 +61,7 @@
                 </div>
                 <div class="stat-divider"></div>
                 <div class="stat">
-                    <span class="stat-number">6</span>
+                    <span class="stat-number">10</span>
                     <span class="stat-label">Challenges</span>
                 </div>
                 <div class="stat-divider"></div>
@@ -80,11 +80,13 @@
                     <span class="code-title">database.py</span>
                 </div>
                 <pre class="code-content"><code><span class="keyword">def</span> <span class="function">get_movie_by_id</span>(movie_id):
-    movies = load_movies()
-    <span class="keyword">for</span> movie <span class="keyword">in</span> movies:
-        <span class="keyword">if</span> movie[<span class="string">"id"</span>] == movie_id:
-            <span class="keyword">return</span> movie
-    <span class="keyword">return</span> <span class="keyword">None</span></code></pre>
+    connection = get_connection()
+    cursor = connection.cursor()
+    cursor.execute(<span class="string">"SELECT * FROM movies WHERE id = ?"</span>, (movie_id,))
+    row = cursor.fetchone()
+    <span class="keyword">if</span> row <span class="keyword">is</span> <span class="keyword">None</span>:
+        <span class="keyword">return</span> <span class="keyword">None</span>
+    <span class="keyword">return</span> dict(row)</code></pre>
             </div>
         </div>
     </header>
@@ -95,13 +97,13 @@
             <div class="section-header">
                 <span class="section-badge"><span class="badge-gt">&gt;</span> About the Workshop</span>
                 <h2>What You'll Build</h2>
-                <p>Create a fully functional movie review application from scratch</p>
+                <p>Create a fully functional movie review application from scratch using a real database</p>
             </div>
             <div class="features-grid">
                 <div class="feature-card">
                     <div class="feature-icon">🎬</div>
                     <h3>Browse Movies</h3>
-                    <p>Display a catalog of movies with posters, titles, and genres</p>
+                    <p>Display a catalog of 12 movies with posters, titles, and genres</p>
                 </div>
                 <div class="feature-card">
                     <div class="feature-icon">⭐</div>
@@ -122,6 +124,11 @@
                     <div class="feature-icon">🏆</div>
                     <h3>Top 5 Rated</h3>
                     <p>See the highest-rated movies based on reviews</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🗄️</div>
+                    <h3>SQLite Database</h3>
+                    <p>Learn real database skills with SQL queries</p>
                 </div>
             </div>
         </div>
@@ -159,14 +166,12 @@
                 <div class="tech-card">
                     <div class="tech-icon">
                         <svg viewBox="0 0 128 128" width="48" height="48">
-                            <path fill="#E44D26" d="M19.037 113.876L9.032 1.661h109.936l-10.016 112.198-45.019 12.48z"/>
-                            <path fill="#F16529" d="M64 116.8l36.378-10.086 8.559-95.878H64z"/>
-                            <path fill="#EBEBEB" d="M64 52.455H45.788l-1.257-14.094H64V24.356H27.325l.33 3.692 3.382 37.927H64zm0 35.743l-.061.017-15.327-4.14-.979-10.975H33.816l1.928 21.609 28.193 7.826.063-.017z"/>
-                            <path fill="#fff" d="M63.952 52.455v14.005h16.947l-1.597 17.849-15.35 4.143v14.319l28.215-7.82.207-2.325 3.234-36.233.335-3.938h-3.708zm0-28.099v14.005h35.716l.296-3.305.673-7.395.33-3.305z"/>
+                            <path fill="#003B57" d="M64 8C33.1 8 8 33.1 8 64s25.1 56 56 56 56-25.1 56-56S94.9 8 64 8zm0 96c-22.1 0-40-17.9-40-40s17.9-40 40-40 40 17.9 40 40-17.9 40-40 40z"/>
+                            <text x="64" y="72" font-family="Arial" font-size="32" fill="#003B57" text-anchor="middle" font-weight="bold">SQL</text>
                         </svg>
                     </div>
-                    <h3>HTML/CSS</h3>
-                    <p>Page structure & styling</p>
+                    <h3>SQLite</h3>
+                    <p>Database</p>
                 </div>
                 <div class="tech-card">
                     <div class="tech-icon">
@@ -258,7 +263,7 @@ pip install -r requirements.txt</code></pre>
             <div class="section-header">
                 <span class="section-badge"><span class="badge-gt">&gt;</span> Your Journey</span>
                 <h2>Workshop Challenges</h2>
-                <p>Complete 6 coding challenges to build the full application</p>
+                <p>Complete 10 coding challenges to build the full application (6 core + 4 bonus)</p>
             </div>
             <div class="challenges-timeline">
                 <div class="challenge-item">
@@ -266,7 +271,7 @@ pip install -r requirements.txt</code></pre>
                     <div class="challenge-content">
                         <span class="challenge-badge done">Done for you</span>
                         <h3>Load Movies</h3>
-                        <p>Learn how to read data from a JSON file</p>
+                        <p>Learn how to read data from a SQLite database</p>
                     </div>
                 </div>
                 <div class="challenge-item">
@@ -274,7 +279,7 @@ pip install -r requirements.txt</code></pre>
                     <div class="challenge-content">
                         <span class="challenge-badge easy">Easy</span>
                         <h3>Find Movie by ID</h3>
-                        <p>Use a for loop to find a specific movie</p>
+                        <p>Use SQL SELECT with WHERE to find a specific movie</p>
                     </div>
                 </div>
                 <div class="challenge-item">
@@ -282,7 +287,7 @@ pip install -r requirements.txt</code></pre>
                     <div class="challenge-content">
                         <span class="challenge-badge medium">Medium</span>
                         <h3>Save Reviews</h3>
-                        <p>Store user reviews in a dictionary</p>
+                        <p>Use SQL INSERT to store user reviews in the database</p>
                     </div>
                 </div>
                 <div class="challenge-item">
@@ -290,7 +295,7 @@ pip install -r requirements.txt</code></pre>
                     <div class="challenge-content">
                         <span class="challenge-badge medium">Medium</span>
                         <h3>Calculate Ratings</h3>
-                        <p>Compute average star ratings</p>
+                        <p>Compute average star ratings from reviews</p>
                     </div>
                 </div>
                 <div class="challenge-item">
@@ -298,7 +303,7 @@ pip install -r requirements.txt</code></pre>
                     <div class="challenge-content">
                         <span class="challenge-badge easy">Easy</span>
                         <h3>Search Movies</h3>
-                        <p>Filter movies by title</p>
+                        <p>Filter movies by title using Python</p>
                     </div>
                 </div>
                 <div class="challenge-item">
@@ -307,6 +312,38 @@ pip install -r requirements.txt</code></pre>
                         <span class="challenge-badge medium">Medium</span>
                         <h3>Top 5 Highest Rated</h3>
                         <p>Sort and display top-rated movies</p>
+                    </div>
+                </div>
+                <div class="challenge-item">
+                    <div class="challenge-number">7</div>
+                    <div class="challenge-content">
+                        <span class="challenge-badge bonus">Bonus</span>
+                        <h3>Filter by Genre</h3>
+                        <p>Get all movies of a specific genre</p>
+                    </div>
+                </div>
+                <div class="challenge-item">
+                    <div class="challenge-number">8</div>
+                    <div class="challenge-content">
+                        <span class="challenge-badge bonus">Bonus</span>
+                        <h3>Count Reviews</h3>
+                        <p>Count how many reviews a movie has</p>
+                    </div>
+                </div>
+                <div class="challenge-item">
+                    <div class="challenge-number">9</div>
+                    <div class="challenge-content">
+                        <span class="challenge-badge bonus">Bonus</span>
+                        <h3>Get All Genres</h3>
+                        <p>Get a list of unique genres from the database</p>
+                    </div>
+                </div>
+                <div class="challenge-item">
+                    <div class="challenge-number">10</div>
+                    <div class="challenge-content">
+                        <span class="challenge-badge bonus">Bonus</span>
+                        <h3>Delete a Review</h3>
+                        <p>Use SQL DELETE to remove a review</p>
                     </div>
                 </div>
             </div>

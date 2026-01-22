@@ -657,6 +657,11 @@ a {
     color: #FBBF24;
 }
 
+.challenge-badge.bonus {
+    background: rgba(168, 85, 247, 0.2);
+    color: #A855F7;
+}
+
 .challenge-content h3 {
     font-size: 1.25rem;
     font-weight: 700;

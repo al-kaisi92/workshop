@@ -6,12 +6,19 @@ All your challenges are in one file: `database.py`
 
 Open it and look for the `TODO` comments. Complete each challenge in order!
 
+**This app uses SQLite** - a real database that stores data in a file called `movies.db`.
+
 ---
 
 ## Challenge 1: Load Movies (DONE!)
 **Already completed for you!**
 
-Look at the `load_movies()` function to see how it works. Use it as a reference!
+Look at the `load_movies()` function to see how it works. It shows you:
+- How to connect to a SQLite database
+- How to run a SELECT query
+- How to convert results to dictionaries
+
+Use it as a reference for the other challenges!
 
 ---
 
@@ -29,19 +36,33 @@ def get_movie_by_id(movie_id):
 ```
 
 ### What to Do
-1. Call `load_movies()` to get all movies
-2. Loop through the movies with `for movie in movies:`
-3. Check if `movie["id"]` equals `movie_id`
-4. If it matches, return that movie
-5. If no match found, return `None`
+1. Create a connection: `connection = get_connection()`
+2. Get a cursor: `cursor = connection.cursor()`
+3. Run the SELECT query: `cursor.execute("SELECT * FROM movies WHERE id = ?", (movie_id,))`
+4. Get ONE result: `row = cursor.fetchone()`
+5. Check if movie was found: `if row is None: return None`
+6. Convert to dictionary: `movie = dict(row)`
+7. Add reviews: `movie["reviews"] = get_reviews_for_movie(movie_id)`
+8. Close connection: `connection.close()`
+9. Return the movie!
 
 ### Hints
 ```python
-movies = load_movies()
-for movie in movies:
-    if movie["id"] == movie_id:
-        return movie
-return None
+connection = get_connection()
+cursor = connection.cursor()
+
+cursor.execute("SELECT * FROM movies WHERE id = ?", (movie_id,))
+row = cursor.fetchone()
+
+if row is None:
+    connection.close()
+    return None
+
+movie = dict(row)
+movie["reviews"] = get_reviews_for_movie(movie_id)
+
+connection.close()
+return movie
 ```
 
 ### Test It
@@ -53,7 +74,7 @@ Click on any movie poster. The movie detail page should load with the correct ti
 **Difficulty:** Medium | **Time:** 15 mins
 
 ### Goal
-When someone submits the review form, save their review!
+When someone submits the review form, save their review to the database!
 
 ### The Function
 ```python
@@ -63,15 +84,24 @@ def add_review(movie_id, review):
 ```
 
 ### What to Do
-1. Check if `movie_id` exists in `reviews_storage`
-2. If not, create an empty list: `reviews_storage[movie_id] = []`
-3. Append the review: `reviews_storage[movie_id].append(review)`
+1. Create a connection: `connection = get_connection()`
+2. Get a cursor: `cursor = connection.cursor()`
+3. Run the INSERT query with the review data
+4. **COMMIT the changes**: `connection.commit()` (very important!)
+5. Close connection: `connection.close()`
 
 ### Hints
 ```python
-if movie_id not in reviews_storage:
-    reviews_storage[movie_id] = []
-reviews_storage[movie_id].append(review)
+connection = get_connection()
+cursor = connection.cursor()
+
+cursor.execute("""
+    INSERT INTO reviews (movie_id, reviewer_name, rating, comment)
+    VALUES (?, ?, ?, ?)
+""", (movie_id, review["name"], review["rating"], review["comment"]))
+
+connection.commit()  # Don't forget this!
+connection.close()
 ```
 
 ### Test It
@@ -96,21 +126,16 @@ def get_average_rating(movie_id):
 ```
 
 ### What to Do
-1. Get the movie using `get_movie_by_id(movie_id)`
-2. If no movie found, return `0`
-3. Get the reviews: `reviews = movie.get("reviews", [])`
-4. If no reviews (length is 0), return `0`
-5. Add up all the ratings using a loop
-6. Divide total by number of reviews
-7. Use `round(average, 1)` to round to 1 decimal place
+1. Get reviews: `reviews = get_reviews_for_movie(movie_id)`
+2. If no reviews (length is 0), return `0`
+3. Add up all the ratings using a loop
+4. Divide total by number of reviews
+5. Use `round(average, 1)` to round to 1 decimal place
 
 ### Hints
 ```python
-movie = get_movie_by_id(movie_id)
-if movie is None:
-    return 0
+reviews = get_reviews_for_movie(movie_id)
 
-reviews = movie.get("reviews", [])
 if len(reviews) == 0:
     return 0
 
@@ -143,8 +168,8 @@ def search_movies(query):
 ```
 
 ### What to Do
-1. Get all movies: `movies = load_movies()`
-2. If query is empty, return all movies
+1. If query is empty, return all movies: `return load_movies()`
+2. Load all movies: `movies = load_movies()`
 3. Convert query to lowercase: `query.lower()`
 4. Loop through movies
 5. Check if query is in the movie title (also lowercase)
@@ -153,11 +178,10 @@ def search_movies(query):
 
 ### Hints
 ```python
-movies = load_movies()
-
 if query == "":
-    return movies
+    return load_movies()
 
+movies = load_movies()
 query_lower = query.lower()
 results = []
 
@@ -169,9 +193,9 @@ return results
 ```
 
 ### Test It
-- Type "dark" → should show "The Dark Knight"
-- Type "SPIDER" → should show "Spider-Man: Into the Spider-Verse"
-- Type "xyz" → should show "No movies found"
+- Type "dark" - should show "The Dark Knight"
+- Type "SPIDER" - should show "Spider-Man: Into the Spider-Verse"
+- Type "xyz" - should show "No movies found"
 
 ---
 
@@ -225,13 +249,127 @@ return sorted_movies[:limit]
 
 ---
 
+# BONUS CHALLENGES!
+
+Finished the main challenges? Try these bonus ones!
+
+---
+
+## Challenge 7: Filter by Genre (BONUS)
+**Difficulty:** Easy | **Time:** 10 mins
+
+### Goal
+Get all movies of a specific genre (like "Action" or "Drama").
+
+### The Function
+```python
+def get_movies_by_genre(genre):
+    # Your code here!
+    return load_movies()
+```
+
+### Hints
+```python
+movies = load_movies()
+
+if genre == "":
+    return movies
+
+genre_lower = genre.lower()
+results = []
+
+for movie in movies:
+    if movie["genre"].lower() == genre_lower:
+        results.append(movie)
+
+return results
+```
+
+---
+
+## Challenge 8: Count Reviews (BONUS)
+**Difficulty:** Easy | **Time:** 5 mins
+
+### Goal
+Count how many reviews a movie has.
+
+### The Function
+```python
+def count_reviews(movie_id):
+    # Your code here!
+    return 0
+```
+
+### Hints
+```python
+reviews = get_reviews_for_movie(movie_id)
+return len(reviews)
+```
+
+---
+
+## Challenge 9: Get All Genres (BONUS)
+**Difficulty:** Medium | **Time:** 10 mins
+
+### Goal
+Get a list of all unique genres (no duplicates).
+
+### The Function
+```python
+def get_all_genres():
+    # Your code here!
+    return []
+```
+
+### Hints
+```python
+movies = load_movies()
+genres = []
+
+for movie in movies:
+    if movie["genre"] not in genres:
+        genres.append(movie["genre"])
+
+genres.sort()
+return genres
+```
+
+---
+
+## Challenge 10: Delete a Review (BONUS)
+**Difficulty:** Medium | **Time:** 10 mins
+
+### Goal
+Remove a review from the database.
+
+### The Function
+```python
+def delete_review(review_id):
+    # Your code here!
+    pass
+```
+
+### Hints
+```python
+connection = get_connection()
+cursor = connection.cursor()
+
+cursor.execute("DELETE FROM reviews WHERE id = ?", (review_id,))
+
+connection.commit()
+connection.close()
+```
+
+---
+
 ## Finished Everything?
 
-Amazing work! You've built a complete web application!
+Amazing work! You've built a complete web application with a real database!
 
 ### What You Learned
 - Python fundamentals (functions, loops, dictionaries)
-- Reading JSON data files
+- **SQLite database** - a real database used in production apps!
+- **SQL queries** - SELECT, INSERT, DELETE
 - FastAPI for web routes
 - HTML templates with Jinja2
 - Form handling
@@ -239,14 +377,44 @@ Amazing work! You've built a complete web application!
 
 ### Next Steps
 1. Show a mentor to get your completion certificate!
-2. Try adding more features:
-   - Filter by genre
-   - Sort by year
-   - Add more movies to `movies.json`
+2. Try adding more features to the app
 
 ---
 
 ## Quick Reference
+
+### SQL Commands
+```sql
+-- Get all movies
+SELECT * FROM movies
+
+-- Get one movie by ID
+SELECT * FROM movies WHERE id = 1
+
+-- Insert a new review
+INSERT INTO reviews (movie_id, reviewer_name, rating, comment)
+VALUES (1, 'John', 5, 'Great movie!')
+
+-- Delete a review
+DELETE FROM reviews WHERE id = 1
+```
+
+### Database Connection Pattern
+```python
+# Step 1: Connect
+connection = get_connection()
+cursor = connection.cursor()
+
+# Step 2: Run query
+cursor.execute("SELECT * FROM movies")
+
+# Step 3: Get results
+rows = cursor.fetchall()  # All rows
+row = cursor.fetchone()   # One row
+
+# Step 4: Close
+connection.close()
+```
 
 ### Dictionaries (like JavaScript objects)
 ```python
@@ -288,8 +456,8 @@ for review in reviews:
 
 ### If Statements
 ```python
-if movie_id not in reviews_storage:
-    reviews_storage[movie_id] = []
+if query == "":
+    return load_movies()
 
 if len(reviews) == 0:
     return 0

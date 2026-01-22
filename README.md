@@ -1,6 +1,6 @@
 # Movie Review App Workshop
 
-A hands-on workshop where BTEC students (complete beginners) build a movie review web application using **Python** and **FastAPI**.
+A hands-on workshop where BTEC students (complete beginners) build a movie review web application using **Python**, **FastAPI**, and **SQLite**.
 
 ## Workshop Overview
 
@@ -9,18 +9,19 @@ A hands-on workshop where BTEC students (complete beginners) build a movie revie
 | **Duration** | 2 hours 45 minutes |
 | **Students** | ~20 per room |
 | **Mentors** | 4-5 per room (at least one Python-strong) |
-| **Tech Stack** | Python, FastAPI, Jinja2, JSON |
+| **Tech Stack** | Python, FastAPI, Jinja2, SQLite |
 | **Tools** | VS Code, Python 3.8+ |
 
 ## What Students Will Build
 
 A movie review app with the following features:
-- Browse a catalog of movies
+- Browse a catalog of 12 movies
 - Click to view movie details
 - Submit reviews with star ratings (1-5)
 - See average ratings calculated from reviews
 - Search movies by title
 - View Top 5 highest-rated movies
+- **NEW**: All data stored in a real SQLite database!
 
 ## Repository Structure
 
@@ -33,11 +34,9 @@ workshop/
 ├── slides/                      # PowerPoint presentation
 │   └── workshop-slides.pptx
 ├── movie-review-app/            # Starter code (students work here)
-│   ├── main.py                  # FastAPI routes
-│   ├── database.py              # Students complete TODOs here (6 challenges)
+│   ├── main.py                  # FastAPI routes (fully commented)
+│   ├── database.py              # Students complete TODOs here (10 challenges)
 │   ├── requirements.txt         # Python dependencies
-│   ├── data/
-│   │   └── movies.json          # Movie data
 │   ├── templates/               # Jinja2 HTML templates
 │   └── static/css/
 │       └── style.css
@@ -59,7 +58,9 @@ workshop/
 
 ### The Challenges
 
-Students work through 6 challenges in `database.py`, each marked with `TODO` comments:
+Students work through challenges in `database.py`, each marked with `TODO` comments:
+
+#### Core Challenges (Required)
 
 | Challenge | Function | Difficulty | Time |
 |-----------|----------|------------|------|
@@ -70,15 +71,25 @@ Students work through 6 challenges in `database.py`, each marked with `TODO` com
 | 5 | `search_movies()` | Easy | 10 min |
 | 6 | `get_top_rated_movies()` | Medium | 15 min |
 
+#### Bonus Challenges (For Fast Learners)
+
+| Challenge | Function | Difficulty | Time |
+|-----------|----------|------------|------|
+| 7 | `get_movies_by_genre()` | Easy | 10 min |
+| 8 | `count_reviews()` | Easy | 5 min |
+| 9 | `get_all_genres()` | Medium | 10 min |
+| 10 | `delete_review()` | Medium | 10 min |
+
 ## Key Concepts Taught
 
 - **Python Fundamentals**: Variables, functions, loops, dictionaries
+- **SQLite Database**: Creating tables, inserting data, querying data
+- **SQL Commands**: SELECT, INSERT, DELETE, WHERE clauses
 - **Lists & Dictionaries**: Storing and accessing data
 - **for loops**: Iterating through collections
 - **if statements**: Conditional logic
 - **Sorting**: Using `sorted()` with custom keys
 - **FastAPI basics**: Web routes and request handling
-- **JSON data**: Reading and using structured data
 
 ## For Mentors
 
@@ -114,6 +125,10 @@ Students work through 6 challenges in `database.py`, each marked with `TODO` com
 git clone git@github.com:al-kaisi92/workshop.git
 cd workshop/movie-review-app
 
+# Create virtual environment (recommended)
+python3 -m venv venv
+source venv/bin/activate  # On Windows: venv\Scripts\activate
+
 # Install dependencies
 pip install -r requirements.txt
 
@@ -122,6 +137,11 @@ uvicorn main:app --reload
 
 # Visit http://127.0.0.1:8000
 ```
+
+**Note**: When you first run the app, it will automatically:
+1. Create a `movies.db` SQLite database file
+2. Create the `movies` and `reviews` tables
+3. Seed the database with 12 movies
 
 ### VS Code Setup for Students
 
@@ -144,8 +164,25 @@ uvicorn main:app --reload
 | Issue | Cause | Fix |
 |-------|-------|-----|
 | `None` when clicking movie | `get_movie_by_id` not implemented | Complete Challenge 2 |
-| Reviews disappear | `add_review` not implemented | Complete Challenge 3 |
+| Reviews disappear on refresh | `add_review` not committing | Add `connection.commit()` in Challenge 3 |
 | Rating shows 0 | `get_average_rating` not implemented | Complete Challenge 4 |
 | Top 5 not showing | `get_top_rated_movies` not implemented or no reviews added | Complete Challenge 6, add some reviews first |
 | `IndentationError` | Mixed tabs/spaces | Use consistent 4-space indentation |
 | `ModuleNotFoundError` | Dependencies not installed | Run `pip install -r requirements.txt` |
+| `movies.db` gets corrupted | Database issues | Delete `movies.db` and restart the app |
+
+## Movies Included
+
+The app comes pre-seeded with 12 popular movies:
+1. The Dark Knight (2008) - Action
+2. Inception (2010) - Sci-Fi
+3. Spider-Man: Into the Spider-Verse (2018) - Animation
+4. The Shawshank Redemption (1994) - Drama
+5. Interstellar (2014) - Sci-Fi
+6. The Lion King (1994) - Animation
+7. Avengers: Endgame (2019) - Action
+8. Parasite (2019) - Drama
+9. The Matrix (1999) - Sci-Fi
+10. Forrest Gump (1994) - Drama
+11. Toy Story (1995) - Animation
+12. Pulp Fiction (1994) - Crime
