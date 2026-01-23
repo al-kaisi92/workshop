@@ -462,15 +462,14 @@ def get_movie_by_id(movie_id):
     movie = get_movie_by_id(999)
     # Returns: None (movie doesn't exist)
     """
-    # TODO: Write your code here!
-    # Remember to:
-    # 1. Create a session
-    # 2. Query the movie by id using .filter()
-    # 3. Use .first() to get one result
-    # 4. Check if movie exists
-    # 5. Convert to dict and return
-    # 6. Use try/finally to close the session
-    pass
+    session = get_session()
+    try:
+        movie = session.query(Movie).filter(Movie.id == movie_id).first()
+        if movie is None:
+            return None
+        return movie.to_dict()
+    finally:
+        session.close()
 
 
 # ============================================================================
@@ -533,14 +532,18 @@ def add_review(movie_id, review):
     add_review(1, review)
     # This adds a new review for movie with id=1
     """
-    # TODO: Write your code here!
-    # Remember to:
-    # 1. Create a session
-    # 2. Create a Review object with the review data
-    # 3. Add the review to the session
-    # 4. Commit the changes
-    # 5. Close the session
-    pass
+    session = get_session()
+    try:
+        new_review = Review(
+            movie_id=movie_id,
+            reviewer_name=review["name"],
+            rating=review["rating"],
+            comment=review["comment"]
+        )
+        session.add(new_review)
+        session.commit()
+    finally:
+        session.close()
 
 
 # ============================================================================
@@ -606,14 +609,14 @@ def get_average_rating(movie_id):
     get_average_rating(2)
     # Returns: 0
     """
-    # TODO: Write your code here!
-    # Remember:
-    # 1. Get the movie by id
-    # 2. Handle the case where movie doesn't exist
-    # 3. Handle the case where there are no reviews
-    # 4. Calculate the average
-    # 5. Round to 1 decimal place using round(value, 1)
-    return 0
+    movie = get_movie_by_id(movie_id)
+    if movie is None:
+        return 0
+    reviews = movie.get("reviews", [])
+    if len(reviews) == 0:
+        return 0
+    total = sum(review["rating"] for review in reviews)
+    return round(total / len(reviews), 1)
 
 
 # ============================================================================

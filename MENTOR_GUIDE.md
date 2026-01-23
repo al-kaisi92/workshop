@@ -17,7 +17,8 @@ You'll be supporting BTEC students (complete beginners) as they build a movie re
 | **Python** | Programming language |
 | **FastAPI** | Web framework (handles routes) |
 | **Jinja2** | HTML templating |
-| **JSON** | Data storage |
+| **SQLAlchemy** | ORM (Object-Relational Mapping) |
+| **SQLite** | Database (movies.db file) |
 | **VS Code** | Code editor |
 
 ---
@@ -101,22 +102,34 @@ See "Common Issues" section below.
 **Fix:**
 ```python
 def get_movie_by_id(movie_id):
-    movies = load_movies()
-    for movie in movies:
-        if movie["id"] == movie_id:
-            return movie
-    return None
+    session = get_session()
+    try:
+        movie = session.query(Movie).filter(Movie.id == movie_id).first()
+        if movie is None:
+            return None
+        return movie.to_dict()
+    finally:
+        session.close()
 ```
 
 ### Issue 2: Reviews don't save / disappear
-**Cause:** `add_review()` not implemented
+**Cause:** `add_review()` not implemented or missing `session.commit()`
 
 **Fix:**
 ```python
 def add_review(movie_id, review):
-    if movie_id not in reviews_storage:
-        reviews_storage[movie_id] = []
-    reviews_storage[movie_id].append(review)
+    session = get_session()
+    try:
+        new_review = Review(
+            movie_id=movie_id,
+            reviewer_name=review["name"],
+            rating=review["rating"],
+            comment=review["comment"]
+        )
+        session.add(new_review)
+        session.commit()
+    finally:
+        session.close()
 ```
 
 ### Issue 3: Rating always shows 0
@@ -202,19 +215,31 @@ def get_top_rated_movies(limit=5):
 ### Challenge 2: get_movie_by_id
 ```python
 def get_movie_by_id(movie_id):
-    movies = load_movies()
-    for movie in movies:
-        if movie["id"] == movie_id:
-            return movie
-    return None
+    session = get_session()
+    try:
+        movie = session.query(Movie).filter(Movie.id == movie_id).first()
+        if movie is None:
+            return None
+        return movie.to_dict()
+    finally:
+        session.close()
 ```
 
 ### Challenge 3: add_review
 ```python
 def add_review(movie_id, review):
-    if movie_id not in reviews_storage:
-        reviews_storage[movie_id] = []
-    reviews_storage[movie_id].append(review)
+    session = get_session()
+    try:
+        new_review = Review(
+            movie_id=movie_id,
+            reviewer_name=review["name"],
+            rating=review["rating"],
+            comment=review["comment"]
+        )
+        session.add(new_review)
+        session.commit()
+    finally:
+        session.close()
 ```
 
 ### Challenge 4: get_average_rating
@@ -226,18 +251,16 @@ def get_average_rating(movie_id):
     reviews = movie.get("reviews", [])
     if len(reviews) == 0:
         return 0
-    total = 0
-    for review in reviews:
-        total = total + review["rating"]
+    total = sum(review["rating"] for review in reviews)
     return round(total / len(reviews), 1)
 ```
 
 ### Challenge 5: search_movies
 ```python
 def search_movies(query):
-    movies = load_movies()
     if query == "":
-        return movies
+        return load_movies()
+    movies = load_movies()
     results = []
     for movie in movies:
         if query.lower() in movie["title"].lower():
@@ -259,6 +282,19 @@ def get_top_rated_movies(limit=5):
 
     sorted_movies = sorted(rated_movies, key=lambda m: m["avg_rating"], reverse=True)
     return sorted_movies[:limit]
+```
+
+### Challenge 10: delete_review (Bonus)
+```python
+def delete_review(review_id):
+    session = get_session()
+    try:
+        review = session.query(Review).filter(Review.id == review_id).first()
+        if review:
+            session.delete(review)
+            session.commit()
+    finally:
+        session.close()
 ```
 
 ---
@@ -339,10 +375,10 @@ def get_movie_by_id(movie_id):
 A: "Both are great! Python is often used for backend servers and data processing. It's known for readable syntax that's great for beginners."
 
 **Q: Do the reviews save permanently?**
-A: "In this version, reviews are stored in memory and reset when the server restarts. Real apps use databases for permanent storage."
+A: "Yes! Reviews are saved to a SQLite database file (movies.db). They persist even when the server restarts. This is how real applications work!"
 
 **Q: Can I add my own movies?**
-A: "Yes! Just add more objects to `movies.json`. Copy the format of existing movies."
+A: "The movies are stored in the SQLite database. You could add more by creating a function that uses `session.add()` and `session.commit()`, similar to how we add reviews."
 
 **Q: What does FastAPI do?**
 A: "It connects URLs to Python functions. When you visit `/movie/1`, FastAPI runs the `movie_detail` function with `movie_id=1`."
