@@ -15,13 +15,13 @@ A hands-on workshop where BTEC students (complete beginners) build a movie revie
 ## What Students Will Build
 
 A movie review app with the following features:
-- Browse a catalog of 12 movies
+- Browse a catalog of **9,800+ real movies** from TMDB (The Movie Database)
 - Click to view movie details
 - Submit reviews with star ratings (1-5)
 - See average ratings calculated from reviews
 - Search movies by title
 - View Top 5 highest-rated movies
-- **NEW**: All data stored in a real SQLite database!
+- All data stored in a real SQLite database!
 
 ## Repository Structure
 
@@ -142,7 +142,24 @@ uvicorn main:app --reload
 **Note**: When you first run the app, it will automatically:
 1. Create a `movies.db` SQLite database file
 2. Create the `movies` and `reviews` tables
-3. Seed the database with 12 movies
+3. Seed the database with 12 starter movies
+
+### Loading the Full TMDB Dataset (9,800+ Movies)
+
+Want more movies? We've included a script to load nearly 10,000 real movies from [The Movie Database (TMDB)](https://huggingface.co/datasets/Pablinho/movies-dataset) on Hugging Face!
+
+```bash
+# First, install the datasets library
+pip install datasets
+
+# Load all movies (takes about 30 seconds)
+python load_tmdb_data.py
+
+# Or load a smaller number to test
+python load_tmdb_data.py --limit 100
+```
+
+This gives students a much more realistic experience with thousands of movies to browse and search!
 
 ### VS Code Setup for Students
 
@@ -172,18 +189,38 @@ uvicorn main:app --reload
 | `ModuleNotFoundError` | Dependencies not installed | Run `pip install -r requirements.txt` |
 | `movies.db` gets corrupted | Database issues | Delete `movies.db` and restart the app |
 
-## Movies Included
+## Movie Data
 
-The app comes pre-seeded with 12 popular movies:
-1. The Dark Knight (2008) - Action
-2. Inception (2010) - Sci-Fi
-3. Spider-Man: Into the Spider-Verse (2018) - Animation
-4. The Shawshank Redemption (1994) - Drama
-5. Interstellar (2014) - Sci-Fi
-6. The Lion King (1994) - Animation
-7. Avengers: Endgame (2019) - Action
-8. Parasite (2019) - Drama
-9. The Matrix (1999) - Sci-Fi
-10. Forrest Gump (1994) - Drama
-11. Toy Story (1995) - Animation
-12. Pulp Fiction (1994) - Crime
+### Option 1: Starter Movies (Default)
+The app comes pre-seeded with 12 popular movies to get started quickly.
+
+### Option 2: Full TMDB Dataset (Recommended!)
+Load **9,800+ real movies** from The Movie Database using our data loading script:
+
+```bash
+pip install datasets
+python load_tmdb_data.py
+```
+
+**Where does the data come from?**
+
+We use the [Pablinho/movies-dataset](https://huggingface.co/datasets/Pablinho/movies-dataset) from Hugging Face. This is a collection of movie data from TMDB (The Movie Database) that includes:
+- Movie titles and release years
+- Plot descriptions
+- Genres (Drama, Action, Comedy, Horror, Animation, etc.)
+- Movie poster images
+- Ratings and popularity scores
+
+**Genre breakdown in the full dataset:**
+| Genre | Count |
+|-------|-------|
+| Drama | 1,791 |
+| Action | 1,570 |
+| Comedy | 1,484 |
+| Horror | 868 |
+| Animation | 804 |
+| Adventure | 586 |
+| Thriller | 515 |
+| Crime | 391 |
+| Family | 350 |
+| Romance | 304 |

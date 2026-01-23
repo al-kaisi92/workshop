@@ -11,6 +11,20 @@ The database file is called `movies.db` and it's created automatically when you 
 
 ---
 
+## About the Movie Data
+
+Your app has access to **9,800+ real movies** from TMDB (The Movie Database)!
+
+This data was loaded from [Hugging Face](https://huggingface.co/datasets/Pablinho/movies-dataset) - a website where developers share datasets. Pretty cool, right? You're working with real movie data that includes:
+- Movie titles and release years
+- Plot descriptions (what the movie is about)
+- Genres like Action, Comedy, Drama, Horror, Animation
+- Movie poster images
+
+This means when you build the search feature, you'll have thousands of movies to search through!
+
+---
+
 ## Challenge 1: Load Movies (DONE!)
 **Already completed for you!**
 
@@ -201,9 +215,12 @@ return results
 ```
 
 ### Test It
-- Type "dark" - should show "The Dark Knight"
-- Type "SPIDER" - should show "Spider-Man: Into the Spider-Verse"
-- Type "xyz" - should show "No movies found"
+- Type "batman" - should show all Batman movies
+- Type "SPIDER" - should show all Spider-Man movies
+- Type "avengers" - should show all Avengers movies
+- Type "xyz123" - should show "No movies found"
+
+With 9,800+ movies, searching is way more fun!
 
 ---
 
@@ -385,6 +402,7 @@ Amazing work! You've built a complete web application with a real database!
 - **SQLAlchemy ORM** - industry-standard database library
 - **Database Models** - representing tables as Python classes
 - **Sessions** - managing database connections
+- **Real-world data** - working with a dataset of 9,800+ movies from Hugging Face
 - FastAPI for web routes
 - HTML templates with Jinja2
 - Form handling
@@ -392,6 +410,14 @@ Amazing work! You've built a complete web application with a real database!
 ### Next Steps
 1. Show a mentor to get your completion certificate!
 2. Try adding more features to the app
+
+### Want to Learn More About Data?
+The movie data in this app came from **Hugging Face** (huggingface.co) - a free platform where developers share:
+- **Datasets** - collections of data like our movies
+- **AI Models** - pre-trained artificial intelligence you can use
+- **Code** - examples and tutorials
+
+Check it out if you want to build more cool projects with real data!
 
 ---
 

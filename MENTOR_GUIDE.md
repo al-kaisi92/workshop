@@ -39,7 +39,29 @@ uvicorn main:app --reload
 ```
 Then visit: http://127.0.0.1:8000
 
-### 3. Know the Common Errors
+### 3. Load the Full Movie Dataset (Optional but Recommended!)
+
+The app starts with just 12 movies, but you can load **9,800+ real movies** from TMDB to make it more exciting for students!
+
+```bash
+# Install the datasets library
+pip install datasets
+
+# Load all the movies (takes about 30 seconds)
+python load_tmdb_data.py
+```
+
+**What is this dataset?**
+- It's from [Hugging Face](https://huggingface.co/datasets/Pablinho/movies-dataset) - a website where developers share datasets
+- Contains real movie data from TMDB (The Movie Database)
+- Includes titles, years, plots, genres, and poster images
+
+**Why use it?**
+- Students get to work with real data, not just 12 sample movies
+- Search becomes much more fun with thousands of movies to find
+- Makes the app feel like a real product!
+
+### 4. Know the Common Errors
 See "Common Issues" section below.
 
 ---
@@ -380,6 +402,12 @@ A: "Yes! Reviews are saved to a SQLite database file (movies.db). They persist e
 **Q: Can I add my own movies?**
 A: "The movies are stored in the SQLite database. You could add more by creating a function that uses `session.add()` and `session.commit()`, similar to how we add reviews."
 
+**Q: Where do all these movies come from?**
+A: "We loaded them from a public dataset on Hugging Face! Hugging Face is a website where developers share datasets and AI models. Our movie data comes from TMDB (The Movie Database), which is like IMDb - a huge collection of movie information."
+
+**Q: What is Hugging Face?**
+A: "Hugging Face is a website where people share datasets (collections of data) and machine learning models. It's free to use and has loads of cool stuff - from movie data to images to text. Developers use it to get data for their projects without having to collect it themselves."
+
 **Q: What does FastAPI do?**
 A: "It connects URLs to Python functions. When you visit `/movie/1`, FastAPI runs the `movie_detail` function with `movie_id=1`."
 
@@ -391,6 +419,7 @@ A: "It connects URLs to Python functions. When you visit `/movie/1`, FastAPI run
 - [ ] Read this entire guide
 - [ ] Complete all challenges yourself
 - [ ] Test running the app locally
+- [ ] Load the full movie dataset: `pip install datasets && python load_tmdb_data.py`
 - [ ] Have solution folder ready for reference
 
 ### During the Session
