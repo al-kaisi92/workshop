@@ -673,6 +673,49 @@ a {
     font-size: 0.95rem;
 }
 
+/* Deploy Section */
+.deploy {
+    background: linear-gradient(180deg, var(--black) 0%, var(--gray-900) 100%);
+}
+
+.deploy-settings {
+    margin: 1rem 0;
+}
+
+.deploy-settings table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.85rem;
+}
+
+.deploy-settings table td {
+    padding: 0.5rem 0;
+    border-bottom: 1px solid var(--gray-700);
+}
+
+.deploy-settings table td:first-child {
+    color: var(--gray-400);
+    width: 40%;
+}
+
+.deploy-settings table td:last-child {
+    color: var(--gray-300);
+}
+
+.deploy-note {
+    margin-top: 1rem;
+    padding: 1rem;
+    background: rgba(251, 191, 36, 0.1);
+    border: 1px solid rgba(251, 191, 36, 0.3);
+    border-radius: 8px;
+}
+
+.deploy-note p {
+    margin: 0;
+    font-size: 0.85rem;
+    color: var(--gray-300);
+}
+
 /* CTA Section */
 .cta {
     background: var(--gray-900);
