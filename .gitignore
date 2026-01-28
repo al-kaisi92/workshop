@@ -10,9 +10,8 @@ ENV/
 .venv/
 .env
 
-# Database - students will generate their own
-*.db
-movies.db
+# Database backups only
+*.db.bak
 
 # IDE
 .idea/
