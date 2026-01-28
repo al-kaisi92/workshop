@@ -224,3 +224,59 @@ We use the [Pablinho/movies-dataset](https://huggingface.co/datasets/Pablinho/mo
 | Crime | 391 |
 | Family | 350 |
 | Romance | 304 |
+
+---
+
+## Deploying to Render (Free Hosting)
+
+Want to share your app with the world? Deploy it to Render for free!
+
+### Step 1: Create a Render Account
+
+1. Go to [render.com](https://render.com)
+2. Click **"Get Started for Free"**
+3. Sign up with your GitHub account (recommended) or email
+
+### Step 2: Create a New Web Service
+
+1. From your Render dashboard, click **"New +"** → **"Web Service"**
+2. Connect your GitHub account if you haven't already
+3. Select your forked `workshop` repository
+4. Configure the service:
+
+| Setting | Value |
+|---------|-------|
+| **Name** | `movie-review-app` (or any name you like) |
+| **Region** | Choose closest to you |
+| **Branch** | `main` |
+| **Root Directory** | `movie-review-app` |
+| **Runtime** | `Python 3` |
+| **Build Command** | `pip install -r requirements.txt` |
+| **Start Command** | `uvicorn main:app --host 0.0.0.0 --port $PORT` |
+
+5. Select the **Free** plan
+6. Click **"Create Web Service"**
+
+### Step 3: Wait for Deployment
+
+- Render will automatically build and deploy your app
+- This takes about 2-3 minutes
+- Once complete, you'll get a URL like `https://movie-review-app-xxxx.onrender.com`
+
+### Step 4: Visit Your Live App!
+
+Click the URL at the top of your Render dashboard to see your app live on the internet!
+
+### Important Notes
+
+- **Free tier limitations**: The app may "spin down" after 15 minutes of inactivity. The first request after that will take ~30 seconds to wake it up.
+- **Database**: The SQLite database is included in the deployment. Any reviews added will persist until the next deployment.
+- **Updates**: Push changes to your GitHub repo and Render will automatically redeploy.
+
+### Alternative: Deploy with Docker
+
+Render also supports Docker deployments. The repository includes a `Dockerfile`:
+
+1. In Render, choose **"Docker"** as the runtime instead of Python
+2. Set **Root Directory** to `movie-review-app`
+3. Render will automatically detect and use the Dockerfile
