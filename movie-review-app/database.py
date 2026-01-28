@@ -462,14 +462,15 @@ def get_movie_by_id(movie_id):
     movie = get_movie_by_id(999)
     # Returns: None (movie doesn't exist)
     """
-    session = get_session()
-    try:
-        movie = session.query(Movie).filter(Movie.id == movie_id).first()
-        if movie is None:
-            return None
-        return movie.to_dict()
-    finally:
-        session.close()
+    # TODO: Write your code here!
+    # Remember:
+    # 1. Create a session
+    # 2. Query the movie using filter
+    # 3. Check if movie is None
+    # 4. Convert to dictionary
+    # 5. Close the session
+    # 6. Return the result
+    pass
 
 
 # ============================================================================
@@ -532,18 +533,14 @@ def add_review(movie_id, review):
     add_review(1, review)
     # This adds a new review for movie with id=1
     """
-    session = get_session()
-    try:
-        new_review = Review(
-            movie_id=movie_id,
-            reviewer_name=review["name"],
-            rating=review["rating"],
-            comment=review["comment"]
-        )
-        session.add(new_review)
-        session.commit()
-    finally:
-        session.close()
+    # TODO: Write your code here!
+    # Remember:
+    # 1. Create a session
+    # 2. Create a Review object with the data
+    # 3. Add it to the session
+    # 4. Commit the changes
+    # 5. Close the session
+    pass
 
 
 # ============================================================================
@@ -609,14 +606,16 @@ def get_average_rating(movie_id):
     get_average_rating(2)
     # Returns: 0
     """
-    movie = get_movie_by_id(movie_id)
-    if movie is None:
-        return 0
-    reviews = movie.get("reviews", [])
-    if len(reviews) == 0:
-        return 0
-    total = sum(review["rating"] for review in reviews)
-    return round(total / len(reviews), 1)
+    # TODO: Write your code here!
+    # Remember:
+    # 1. Get the movie using get_movie_by_id()
+    # 2. Check if movie exists
+    # 3. Get the reviews from the movie
+    # 4. Check if there are no reviews (return 0)
+    # 5. Add up all the ratings
+    # 6. Divide by the number of reviews
+    # 7. Round to 1 decimal place
+    return 0
 
 
 # ============================================================================
